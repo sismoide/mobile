@@ -1,17 +1,44 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import Survey from './components/Survey.js';
 
-export default class App extends React.Component {
+class Home extends React.Component {
+  static navigationOptions = {
+    title: 'Sismoide',
+    headerStyle: {
+      backgroundColor: '#4e88e5',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  };
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        <Button
+          title="Este debería ser el botón de pánico"
+          onPress={() => this.props.navigation.navigate('Survey')}
+        />
       </View>
     );
   }
 }
+
+export default StackNavigator(
+  {
+    Home: {
+      screen: Home
+    },
+    Survey: {
+      screen: Survey 
+    },
+  },
+  {
+    initialRouteName: 'Home'
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
