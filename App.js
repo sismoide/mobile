@@ -3,13 +3,15 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Survey from './components/Survey.js';
 
+import BaseStyle from './styles/base.js';
+
 class Home extends React.Component {
   static navigationOptions = {
     title: 'Sismoide',
     headerStyle: {
-      backgroundColor: '#4e88e5',
+      backgroundColor: BaseStyle.colors.secondaryBackgroundColor
     },
-    headerTintColor: '#fff',
+    headerTintColor: BaseStyle.colors.secondaryTextColor,
     headerTitleStyle: {
       fontWeight: 'bold',
     },

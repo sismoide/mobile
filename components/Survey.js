@@ -5,14 +5,6 @@ import SurveyQuestionModal from './SurveyQuestionModal.js';
 
 
 export default class Survey extends React.Component {
-  state = {
-    modalVisible: false,
-  };
-
-  toggleModalVisibility() {
-    this.setState({ modalVisible: !this.state.modalVisible });
-  }
-
   render() {
     return( 
       <SurveyQuestionModal/>
