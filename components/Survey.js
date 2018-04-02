@@ -1,6 +1,8 @@
 import React from 'react';
 import { Modal, TouchableHighlight, Text, View, StyleSheet } from 'react-native';
 
+import SurveyQuestionModal from './SurveyQuestionModal.js';
+
 
 export default class Survey extends React.Component {
   state = {
@@ -18,7 +20,7 @@ export default class Survey extends React.Component {
         <View style={{ flexDirection: 'row', flex: 1}}>
           <View style={{ flex: 0.1}}/>
           <View style={ styles.modalContainer }>
-            <Text>Hola</Text>
+            <SurveyQuestionModal/>
           </View>
         </View>
         <View style={{ flex: 0.5 }}/>
