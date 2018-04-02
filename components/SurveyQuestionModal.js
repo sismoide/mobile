@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { Modal, 
          StyleSheet,
          Text, 
@@ -7,9 +8,12 @@ import { Modal,
 import BaseStyle from '../styles/base.js';
 
 export default class SurveyQuestionModal extends React.Component {
-  state = {
-    modalVisible: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: true
+    };
+  }
 
   dismissModal() {
     this.setState({ modalVisible: false});
@@ -53,14 +57,28 @@ class ModalHeader extends React.Component {
 class ModalButtonChoices extends React.Component {
   render() {
     return(
-      <View>
-        <Text>Yo soy el modal</Text>
+      <View style={ styles.buttonContainer }>
+        <Choice icon='thumbs-down' text='NO'/>
+        <Choice icon='thumbs-up' text='SÍ'/>
       </View>
     );
   }
 }
 
-const borderRadius = 5;
+class Choice extends React.Component {
+  render() {
+    return(
+      <View style={ styles.button }>
+        <Icon name={this.props.icon}
+              style={ styles.icon }
+              size={30}/>
+        <TouchableHighlight>
+          <Text style={ styles.choiceText}>{ this.props.text }</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+};
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -71,7 +89,7 @@ const styles = StyleSheet.create({
   },
   headerStyle: {
     backgroundColor: BaseStyle.colors.secondaryBackgroundColor,
-    flex: 0.5,
+    flex: 0.6,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20 
@@ -80,5 +98,26 @@ const styles = StyleSheet.create({
     color: BaseStyle.colors.secondaryTextColor,
     fontWeight: 'bold',
     fontSize: 20
+  },
+  buttonContainer: {
+    flex: 0.4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    flex: 1, 
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  choiceText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#888',
+    padding: 20
+  },
+  icon: {
+    color: '#888',
+    padding: 20
   }
 });
