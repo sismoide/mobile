@@ -1,14 +1,36 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
 
-export default class App extends React.Component {
+// Button Element
+class QuakeButton extends Component {
+  _onPressButtonQuake() {
+    console.log('Pressed seism button');
+    Alert.alert(
+      'Temblor!',
+	    'Se ha notificado un temblor!',
+	    // change to give option to answer poll
+	    [{text: 'OK', onPress: () => console.log('Pressed OK')}] 
+	  )
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={this._onPressButtonQuake}
+            title="Temblor?"
+            color="#ff0000"
+          />
+        </View>
       </View>
+    );
+  }
+}
+
+export default class HomePage extends Component {
+  render() {
+    return (
+      <QuakeButton/>
     );
   }
 }
@@ -16,8 +38,9 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
   },
-});
+  buttonContainer: {
+    margin: 20
+  }
+})
