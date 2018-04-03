@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Survey from './components/Survey.js';
+import QuakeButton from './components/QuakeButton.js';
 
 import BaseStyle from './styles/base.js';
 
@@ -19,10 +20,7 @@ class Home extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button
-          title="Este debería ser el botón de pánico"
-          onPress={() => this.props.navigation.navigate('Survey')}
-        />
+        <QuakeButton/>
       </View>
     );
   }
