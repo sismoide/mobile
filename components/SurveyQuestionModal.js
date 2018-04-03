@@ -8,15 +8,13 @@ import { Modal,
 import BaseStyle from '../styles/base.js';
 
 export default class SurveyQuestionModal extends React.Component {
+  static RESPONSES = {
+    NO: 0,
+    YES: 1
+  };
+
   constructor(props) {
     super(props);
-    this.state = {
-      modalVisible: true
-    };
-  }
-
-  dismissModal() {
-    this.setState({ modalVisible: false});
   }
 
   render() {
@@ -24,15 +22,17 @@ export default class SurveyQuestionModal extends React.Component {
       <Modal
         animationType="fade"
         transparent={false}
-        visible={this.state.modalVisible}
+        visible={ this.props.visible }
         onRequestClose={() => {}}>
         <View style={{ flexDirection: 'column', flex: 1}}>
           <View style={{ flex: 0.5 }}/>
           <View style={{ flexDirection: 'row', flex: 1}}>
             <View style={{ flex: 0.1}}/>
             <View style={ styles.modalContainer }>
-              <ModalHeader/>
-              <ModalButtonChoices/>
+              <ModalHeader text={ this.props.question.question }/>
+              <ModalButtonChoices 
+                questionId={ this.props.question.id }
+                onResponse={ this.props.onResponse }/>
             </View>
           </View>
           <View style={{ flex: 0.5 }}/>
@@ -47,7 +47,7 @@ class ModalHeader extends React.Component {
     return(
       <View style={ styles.headerStyle } >
         <Text style={ styles.headerText }>
-          Se están moviendo las mesas o los platos?
+          { this.props.text }
         </Text>
       </View>
     )
@@ -58,8 +58,22 @@ class ModalButtonChoices extends React.Component {
   render() {
     return(
       <View style={ styles.buttonContainer }>
-        <Choice icon='thumbs-down' text='NO'/>
-        <Choice icon='thumbs-up' text='SÍ'/>
+        <Choice 
+          icon='thumbs-down' 
+          text='NO' 
+          onPress={ () => { 
+            this.props.onResponse(
+              this.props.questionId,
+              SurveyQuestionModal.RESPONSES.NO);
+          } }/>
+        <Choice 
+          icon='thumbs-up' 
+          text='SÍ'
+          onPress={ () => { 
+            this.props.onResponse(
+              this.props.questionId,
+              SurveyQuestionModal.RESPONSES.YES);
+          } }/>
       </View>
     );
   }
@@ -72,7 +86,8 @@ class Choice extends React.Component {
         <Icon name={this.props.icon}
               style={ styles.icon }
               size={30}/>
-        <TouchableHighlight>
+          <TouchableHighlight 
+            onPress={ this.props.onPress }>
           <Text style={ styles.choiceText}>{ this.props.text }</Text>
         </TouchableHighlight>
       </View>

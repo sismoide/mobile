@@ -5,9 +5,35 @@ import SurveyQuestionModal from './SurveyQuestionModal.js';
 
 
 export default class Survey extends React.Component {
+  constructor(props) {
+    super(props);
+    this.questions = [
+      { id: 0, question: 'Te gustan los árboles?' },
+      { id: 1, question: 'Se están moviendo las mesas?' },
+      { id: 2, question: 'Se destruyeron los autos?' }
+    ];
+    this.state = {
+      activeQuestionId: 0
+    }
+  }
+
+  onResponse(questionId, response) {
+    this.setState({ activeQuestionId: this.state.activeQuestionId + 1});
+  }
+
   render() {
     return( 
-      <SurveyQuestionModal/>
+      <View>
+        {
+          this.questions.map((question) => (
+            <SurveyQuestionModal
+              key={ question.id }
+              question={ question }
+              onResponse={ this.onResponse.bind(this) }
+              visible={ this.state.activeQuestionId === question.id } />
+          ))
+				}	
+      </View>
     );
   }
 }
