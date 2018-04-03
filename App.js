@@ -20,7 +20,9 @@ class Home extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <QuakeButton/>
+        {/* pass navigation so that QuakeButton can handle navigation
+            itself */}
+        <QuakeButton navigation={ this.props.navigation }/>
       </View>
     );
   }
