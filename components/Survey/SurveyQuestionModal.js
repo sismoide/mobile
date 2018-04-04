@@ -8,6 +8,9 @@ import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
 import SurveyModal from './SurveyModal.js';
 
+/**
+ * Represents a modal with a question with which the user can interact (say yes/no).
+ */
 export default class SurveyQuestionModal extends React.Component {
   static RESPONSES = {
     NO: 0,
