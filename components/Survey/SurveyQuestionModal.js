@@ -1,11 +1,11 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Modal, 
-         StyleSheet,
          Text, 
          TouchableHighlight, 
          View } from 'react-native';
-import BaseStyle from '../../styles/base.js';
+import styles from './styles.js';
+import ModalHeader from './ModalHeader.js';
 
 export default class SurveyQuestionModal extends React.Component {
   static RESPONSES = {
@@ -41,18 +41,6 @@ export default class SurveyQuestionModal extends React.Component {
     );
   }
 };
-
-class ModalHeader extends React.Component {
-  render() {
-    return(
-      <View style={ styles.headerStyle } >
-        <Text style={ styles.headerText }>
-          { this.props.text }
-        </Text>
-      </View>
-    )
-  }
-}
 
 class ModalButtonChoices extends React.Component {
   render() {
@@ -94,45 +82,3 @@ class Choice extends React.Component {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 0.8,
-    backgroundColor: BaseStyle.colors.primaryBackgroundColor,
-    borderWidth: 2,
-    borderRadius: 2,
-  },
-  headerStyle: {
-    backgroundColor: BaseStyle.colors.secondaryBackgroundColor,
-    flex: 0.6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20 
-  },
-  headerText: {
-    color: BaseStyle.colors.secondaryTextColor,
-    fontWeight: 'bold',
-    fontSize: 20
-  },
-  buttonContainer: {
-    flex: 0.4,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  button: {
-    flex: 1, 
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  choiceText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#888',
-    padding: 20
-  },
-  icon: {
-    color: '#888',
-    padding: 20
-  }
-});
