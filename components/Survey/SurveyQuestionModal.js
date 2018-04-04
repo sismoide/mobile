@@ -5,7 +5,7 @@ import { Modal,
          Text, 
          TouchableHighlight, 
          View } from 'react-native';
-import BaseStyle from '../styles/base.js';
+import BaseStyle from '../../styles/base.js';
 
 export default class SurveyQuestionModal extends React.Component {
   static RESPONSES = {
@@ -21,7 +21,7 @@ export default class SurveyQuestionModal extends React.Component {
     return (
       <Modal
         animationType="fade"
-        transparent={false}
+        transparent={ true }
         visible={ this.props.visible }
         onRequestClose={() => {}}>
         <View style={{ flexDirection: 'column', flex: 1}}>

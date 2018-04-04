@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import Survey from './components/Survey.js';
+import Survey from './components/Survey/Survey.js';
 import QuakeButton from './components/QuakeButton.js';
 
 import BaseStyle from './styles/base.js';

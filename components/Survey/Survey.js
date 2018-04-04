@@ -5,6 +5,10 @@ import SurveyQuestionModal from './SurveyQuestionModal.js';
 
 
 export default class Survey extends React.Component {
+  static navigationOptions = {
+    // disable back button during survey
+    headerLeft: null
+  };
   constructor(props) {
     super(props);
     this.questions = [
