@@ -6,6 +6,7 @@ import { Modal,
          View } from 'react-native';
 import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
+import SurveyModal from './SurveyModal.js';
 
 export default class SurveyCompleteModal extends React.Component {
   static RESPONSES = {
@@ -19,22 +20,9 @@ export default class SurveyCompleteModal extends React.Component {
 
   render() {
     return (
-      <Modal
-        animationType="fade"
-        transparent={ true }
-        visible={ this.props.visible }
-        onRequestClose={() => {}}>
-        <View style={{ flexDirection: 'column', flex: 1}}>
-          <View style={{ flex: 0.5 }}/>
-          <View style={{ flexDirection: 'row', flex: 1}}>
-            <View style={{ flex: 0.1}}/>
-            <View style={ styles.modalContainer }>
-              <ModalHeader text='Felicitaciones!'/>
-            </View>
-          </View>
-          <View style={{ flex: 0.5 }}/>
-        </View>
-      </Modal>
+      <SurveyModal>
+        <ModalHeader text='Felicitaciones!'/>
+      </SurveyModal>
     );
   }
 };
