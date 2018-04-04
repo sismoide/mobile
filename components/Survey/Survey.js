@@ -3,17 +3,26 @@ import { Dimensions, Modal, Text, View, Image } from 'react-native';
 import SurveyQuestionModal from './SurveyQuestionModal.js';
 import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
+import navigationOptions from '../../styles/navigation_options.js';
 
+
+/**
+ * @param {Object} - navigationOptions: original navigation options object.
+ * @returns {Object} - navigation options that don't include a back button.
+ */
+function withoutBackButton(navigationOptions) {
+  clonedNavigationOptions = {};
+  Object.assign(navigationOptions, clonedNavigationOptions);
+  clonedNavigationOptions.headerLeft = null;
+  return clonedNavigationOptions;
+}
 
 /**
  * This component is in charge of rendering question components, 
  * with which the user will interact.
  */
 export default class Survey extends React.Component {
-  static navigationOptions = {
-    // disable back button during survey
-    headerLeft: null
-  };
+  static navigationOptions = withoutBackButton(navigationOptions);
   constructor(props) {
     super(props);
     this.questions = questions;
