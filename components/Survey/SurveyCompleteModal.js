@@ -20,8 +20,8 @@ export default class SurveyCompleteModal extends React.Component {
 
   render() {
     return (
-      <SurveyModal>
-        <ModalHeader text='Felicitaciones!'/>
+      <SurveyModal visible={ true }>
+        <ModalHeader text='Terminaste la encuesta, campeón. Te felicito!'/>
       </SurveyModal>
     );
   }
