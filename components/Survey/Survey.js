@@ -11,8 +11,7 @@ import navigationOptions from '../../styles/navigation_options.js';
  * @returns {Object} - navigation options that don't include a back button.
  */
 function withoutBackButton(navigationOptions) {
-  clonedNavigationOptions = {};
-  Object.assign(navigationOptions, clonedNavigationOptions);
+  let clonedNavigationOptions = Object.assign(navigationOptions, {});
   clonedNavigationOptions.headerLeft = null;
   return clonedNavigationOptions;
 }
