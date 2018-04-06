@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
-//import geo from './NotifyQuake.js';
 
 // Button Element
 export default class QuakeButton extends Component {
   constructor(props) {
     super(props);
-//    {/* make `this` available to `onPressQuake` */}
+    {/* make `this` available to `onPressQuake` */}
     this._onPressButtonQuake = this._onPressButtonQuake.bind(this);
   }
 
