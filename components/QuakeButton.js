@@ -1,16 +1,42 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
+//import geo from './NotifyQuake.js';
 
 // Button Element
 export default class QuakeButton extends Component {
-
   constructor(props) {
     super(props);
-    {/* make `this` available to `onPressQuake` */}
+//    {/* make `this` available to `onPressQuake` */}
     this._onPressButtonQuake = this._onPressButtonQuake.bind(this);
   }
 
   _onPressButtonQuake() {
+  
+    // Getting location and timestamp,sending it to server
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        var crd = pos.coords;
+        fetch('http://10.190.54.186:8000/reports/', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            coordinates: {
+              latitude: `${crd.latitude.toFixed(6)}`,
+              longitude: `${crd.longitude.toFixed(6)}`
+            },
+            timestamp: `${Date.now()}`
+          }),
+        });// Handling response
+        //.then((response) => console.log(response.ok));
+      },
+      (error) => alert(error.message),
+      {}
+    );
+    
+    // advancing to survey
     this.props.navigation.navigate('Survey');
   }
   
