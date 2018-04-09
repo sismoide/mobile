@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, TouchableHighlight,  View } from 'react-native';
+import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
 import SurveyModal from './SurveyModal.js';
-import styles from './styles.js';
+import ClickableWithIcon from './ClickableWithIcon.js';
 
 /**
  * Represents the modal the user sees when he's done with the survey
@@ -15,14 +16,17 @@ export default class SurveyCompleteModal extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      visible: true
+    }
   }
 
   render() {
     return (
-      <SurveyModal visible={ true }>
+      <SurveyModal visible={ this.state.visible }>
         <ModalHeader text={ 'Terminaste la encuesta, campeón. Te felicito!'
           + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${this.props.intensity}.` }/>
-        <ThankYouButton/>
+        <ThankYouButton onPress={ () => { this.setState({ visible: false }) } }/>
       </SurveyModal>
     );
   }
@@ -33,9 +37,10 @@ class ThankYouButton extends React.Component {
   render() {
     return(
       <View style={ styles.buttonContainer }>
-        <TouchableHighlight onPress={ () => {} }>
-          <Text>Press me</Text>
-        </TouchableHighlight>
+        <ClickableWithIcon 
+          icon='thumbs-up' 
+          text='De nada!'
+          onPress={ this.props.onPress } />
       </View>
     );
   }
