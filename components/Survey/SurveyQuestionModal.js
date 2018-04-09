@@ -1,12 +1,9 @@
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Modal, 
-         Text, 
-         TouchableHighlight, 
-         View } from 'react-native';
+import { View } from 'react-native';
 import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
 import SurveyModal from './SurveyModal.js';
+import ClickableWithIcon from './ClickableWithIcon.js';
 
 /**
  * Represents a modal with a question with which the user can interact (say yes/no).
@@ -37,7 +34,7 @@ class ModalButtonChoices extends React.Component {
   render() {
     return(
       <View style={ styles.buttonContainer }>
-        <Choice 
+        <ClickableWithIcon
           icon='thumbs-down' 
           text='NO' 
           onPress={ () => { 
@@ -45,7 +42,7 @@ class ModalButtonChoices extends React.Component {
               this.props.questionId,
               SurveyQuestionModal.RESPONSES.NO);
           } }/>
-        <Choice 
+        <ClickableWithIcon
           icon='thumbs-up' 
           text='SÍ'
           onPress={ () => { 
@@ -57,19 +54,3 @@ class ModalButtonChoices extends React.Component {
     );
   }
 }
-
-class Choice extends React.Component {
-  render() {
-    return(
-      <View style={ styles.button }>
-        <Icon name={this.props.icon}
-              style={ styles.icon }
-              size={30}/>
-          <TouchableHighlight 
-            onPress={ this.props.onPress }>
-          <Text style={ styles.choiceText}>{ this.props.text }</Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-};

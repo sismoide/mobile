@@ -68,9 +68,8 @@ export default class Survey extends React.Component {
    * @returns the modal element.
    */
   showModal = () => {
-    console.log(this.state);
     if (this.state.surveyResults !== null) {
-      return <SurveyCompleteModal/>;
+      return <SurveyCompleteModal intensity={ this.state.surveyResults.intensity }/>;
     }
     return this.questions.map((question, index) => (
       <SurveyQuestionModal
