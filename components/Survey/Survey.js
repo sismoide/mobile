@@ -26,7 +26,11 @@ export default class Survey extends React.Component {
     super(props);
     this.questions = questions;
     this.state = {
-      activeQuestionIndex: 0
+      activeQuestionIndex: 0,
+      binarySearchLo: 0,
+      binarySearchHi: this.questions.length - 1,
+      binarySearchMid: Math.floor((this.questions.length - 1) / 2),
+      surveyResults: null
     }
   }
 
@@ -36,7 +40,25 @@ export default class Survey extends React.Component {
    * Updates the active question so that the appropriate modal can be rendered.
    */
   onResponse(questionId, response) {
-    this.setState({ activeQuestionIndex: this.state.activeQuestionIndex + 1});
+    let lo = this.state.binarySearchLo;
+    let hi = this.state.binarySearchHi;
+    let mid = this.state.binarySearchMid;
+    if (response == SurveyQuestionModal.RESPONSES.NO) {
+      hi = mid;
+    } else {
+      lo = mid + 1;
+    }
+    mid = Math.floor((hi + lo) / 2);
+    this.setState({
+      binarySearchLo: lo,
+      binarySearchHi: hi,
+      binarySearchMid: mid
+    });
+    if (lo >= hi) {
+      this.setState({ 
+        surveyResults: { intensity: this.questions[mid].intensity } 
+      });
+    }
   }
 
   /**
@@ -46,7 +68,8 @@ export default class Survey extends React.Component {
    * @returns the modal element.
    */
   showModal = () => {
-    if (this.state.activeQuestionIndex >= this.questions.length) {
+    console.log(this.state);
+    if (this.state.surveyResults !== null) {
       return <SurveyCompleteModal/>;
     }
     return this.questions.map((question, index) => (
@@ -54,7 +77,7 @@ export default class Survey extends React.Component {
         key={ index }
         question={ question }
         onResponse={ this.onResponse.bind(this) }
-        visible={ this.state.activeQuestionIndex === index } />
+        visible={ this.state.binarySearchMid === index } />
     ))
   }
 
