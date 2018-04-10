@@ -7,7 +7,7 @@
 Instalar json-server para el servidor de prueba
 
 ```bash
-$ yarn global add json-server
+$ sudo yarn global add json-server
 ```
 
 Instalar las dependencias del proyecto
