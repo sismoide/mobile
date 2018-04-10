@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
+import Config from '../assets/config.js'
 
 // Button Element
 export default class QuakeButton extends Component {
-
   constructor(props) {
     super(props);
     {/* make `this` available to `onPressQuake` */}
@@ -11,6 +11,31 @@ export default class QuakeButton extends Component {
   }
 
   _onPressButtonQuake() {
+  
+    // Getting location and timestamp,sending it to server
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const crd = pos.coords;
+        fetch(Config.SERVER_URL, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            coordinates: {
+              latitude: `${crd.latitude.toFixed(6)}`,
+              longitude: `${crd.longitude.toFixed(6)}`
+            },
+            timestamp: `${Date.now()}`
+          }),
+        });
+      },
+      (error) => alert(error.message),
+      {}
+    );
+    
+    // advancing to survey
     this.props.navigation.navigate('Survey');
   }
   
