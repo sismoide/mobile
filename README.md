@@ -18,7 +18,7 @@ $ yarn install
 
 # Correr en modo desarollo
 
-Correr una instancia del servidor falso
+Correr una instancia del servidor falso. Puedes encontrar `db.json` [aquí](https://gist.github.com/sgioia9/4f6e2b41429e1ea0acc87af5d5750575)
 
 ```bash
 $ json-server db.json

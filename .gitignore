@@ -3,6 +3,9 @@
 # expo
 .expo/
 
+# json-server
+db.json
+
 # dependencies
 /node_modules
 
