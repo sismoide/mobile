@@ -12,8 +12,8 @@ export default class ClickableWithIcon extends React.Component {
               size={30}/>
           <TouchableHighlight 
             onPress={ this.props.onPress }>
-          <Text style={ styles.choiceText}>{ this.props.text }</Text>
-        </TouchableHighlight>
+            <Text style={ styles.choiceText}>{ this.props.text }</Text>
+          </TouchableHighlight>
       </View>
     );
   }
