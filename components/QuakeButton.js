@@ -14,7 +14,7 @@ export default class QuakeButton extends Component {
     // Getting location and timestamp,sending it to server
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        var crd = pos.coords;
+        const crd = pos.coords;
         fetch('http://10.190.54.186:8000/reports/', {
           method: 'POST',
           headers: {
@@ -28,8 +28,7 @@ export default class QuakeButton extends Component {
             },
             timestamp: `${Date.now()}`
           }),
-        });// Handling response
-        //.then((response) => console.log(response.ok));
+        });
       },
       (error) => alert(error.message),
       {}
