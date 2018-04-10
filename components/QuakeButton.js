@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
+import Config from '../assets/config.js'
 
 // Button Element
 export default class QuakeButton extends Component {
@@ -15,7 +16,7 @@ export default class QuakeButton extends Component {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const crd = pos.coords;
-        fetch('http://10.190.54.186:8000/reports/', {
+        fetch(Config.SERVER_URL, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
