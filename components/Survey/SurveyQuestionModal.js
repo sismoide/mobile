@@ -20,7 +20,9 @@ export default class SurveyQuestionModal extends React.Component {
 
   render() {
     return (
-      <SurveyModal visible={ this.props.visible }>
+      <SurveyModal 
+        visible={ this.props.visible }
+        onDismissSurvey={ this.props.onDismissSurvey }>
         <ModalHeader text={ this.props.question.question }/>
         <ModalButtonChoices 
           questionId={ this.props.question.id }

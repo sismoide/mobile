@@ -40,5 +40,5 @@ export default StyleSheet.create({
   icon: {
     color: '#888',
     padding: 20
-  }
+  },
 });

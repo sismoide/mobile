@@ -1,6 +1,8 @@
 import React from 'react';
-import { Modal, View } from 'react-native';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
+import BaseStyle from './../../styles/base.js';
 
 export default class SurveyModal extends React.Component {
   constructor(props) {
@@ -22,7 +24,12 @@ export default class SurveyModal extends React.Component {
               { this.props.children } 
             </View>
           </View>
-          <View style={{ flex: 0.5 }}/>
+          <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity 
+              onPress={ () => { this.props.onDismissSurvey() } }>
+              <Icon name="window-close" size={ 50 } color='#000' />
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     );

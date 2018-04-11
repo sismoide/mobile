@@ -30,7 +30,8 @@ export default class Survey extends React.Component {
       binarySearchLo: 0,
       binarySearchHi: this.questions.length - 1,
       binarySearchMid: Math.floor((this.questions.length - 1) / 2),
-      surveyResults: null
+      surveyIsOngoing: true, // Survey starts immediately.
+      surveyResults: null // No results, since the survey hasn't been completed.
     }
   }
 
@@ -39,7 +40,7 @@ export default class Survey extends React.Component {
    * notifying the submission of a response.
    * Updates the active question so that the appropriate modal can be rendered.
    */
-  onResponse(questionId, response) {
+  onResponse = (questionId, response) => {
     let lo = this.state.binarySearchLo;
     let hi = this.state.binarySearchHi;
     let mid = this.state.binarySearchMid;
@@ -61,6 +62,21 @@ export default class Survey extends React.Component {
     }
   }
 
+  onDismissSurvey = () => {
+    this.setState({
+      surveyIsOngoing: false
+    })
+  }
+
+  modalShouldBeVisible = (questionIndex) => {
+    // Don't show anything if the survey was canceled/completed.
+    // Dont't show the modal if it's not its turn.
+    return this.state.surveyIsOngoing 
+        && this.state.binarySearchMid === questionIndex;
+  }
+    
+
+
   /**
    * Depending on whether the survey is complete or not,
    * renders either a question modal or the final modal that tells
@@ -69,14 +85,21 @@ export default class Survey extends React.Component {
    */
   showModal = () => {
     if (this.state.surveyResults !== null) {
-      return <SurveyCompleteModal intensity={ this.state.surveyResults.intensity }/>;
+      // If `surveyResults` exist, then the survey was completed.
+      return( 
+        <SurveyCompleteModal 
+          intensity={ this.state.surveyResults.intensity }
+          visible={ this.state.surveyIsOngoing }
+          onDismissSurvey={ this.onDismissSurvey } />
+      );
     }
     return this.questions.map((question, index) => (
       <SurveyQuestionModal
         key={ index }
         question={ question }
-        onResponse={ this.onResponse.bind(this) }
-        visible={ this.state.binarySearchMid === index } />
+        onResponse={ this.onResponse }
+        onDismissSurvey= { this.onDismissSurvey }
+        visible={ this.modalShouldBeVisible(index) } />
     ))
   }
 
