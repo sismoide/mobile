@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
+import { Alert, AppRegistry, Button, StyleSheet, View, Text, NetInfo, AsyncStorage } from 'react-native';
 import Config from '../assets/config.js'
 
 // Button Element
@@ -11,29 +11,43 @@ export default class QuakeButton extends Component {
   }
 
   _onPressButtonQuake() {
-  
-    // Getting location and timestamp,sending it to server
+    var request = {};
+    
+    // Getting location and timestamp
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const crd = pos.coords;
-        fetch(Config.SERVER_URL, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            coordinates: {
-              latitude: `${crd.latitude.toFixed(6)}`,
-              longitude: `${crd.longitude.toFixed(6)}`
-            },
-            timestamp: `${Date.now()}`
-          }),
-        });
-      },
-      (error) => alert(error.message),
-      {}
+			(pos) => {
+				const crd = pos.coords;
+				request = {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						coordinates: {
+							latitude: `${crd.latitude}`,
+							longitude: `${crd.longitude}`
+						},
+						timestamp: `${new Date(Date.now()).toISOString()}`
+					}),
+				}
+			},
+			(error) => console.log(error.message),
+			{}
     );
+    
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      if (connectionInfo.type == 'none') {
+        try {
+          AsyncStorage.setItem('report',JSON.stringify(request));
+				} catch (error) {
+					// Error saving data
+				}
+      } else {
+        console.log("sent");
+        fetch(Config.SERVER_URL, request);
+      }
+    });
     
     // advancing to survey
     this.props.navigation.navigate('Survey');
