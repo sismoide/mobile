@@ -16,17 +16,16 @@ export default class SurveyCompleteModal extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      visible: true
-    }
   }
 
   render() {
     return (
-      <SurveyModal visible={ this.state.visible }>
+      <SurveyModal 
+        visible={ this.props.visible }
+        onDismissSurvey={ this.props.onDismissSurvey} >
         <ModalHeader text={ 'Terminaste la encuesta, campeón. Te felicito!'
           + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${this.props.intensity}.` }/>
-        <ThankYouButton onPress={ () => { this.setState({ visible: false }) } }/>
+        <ThankYouButton onPress={ () => { this.props.onDismissSurvey() } }/>
       </SurveyModal>
     );
   }
