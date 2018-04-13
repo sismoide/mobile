@@ -1,13 +1,31 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { Alert, StyleSheet, Text, View, Button, NetInfo, AsyncStorage } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Survey from './components/Survey/Survey.js';
 import QuakeButton from './components/QuakeButton.js';
 import BaseStyle from './styles/base.js';
 import navigationOptions from './styles/navigation_options.js';
 
-class Home extends React.Component {
+class Home extends React.Component {  
   static navigationOptions = navigationOptions;
+
+  handleConnectionChange(connectionInfo) {
+    if (connectionInfo.type != 'none') {    
+			const quakeReport = AsyncStorage.getItem('quakeReport');
+			const survey = AsyncStorage.getItem('survey');
+			if (quakeReport != null) {
+				//Alert.alert(quakeReport);
+				AsyncStorage.removeItem('quakeReport');
+			}
+			if (survey != null) {
+				//Alert.alert(survey);
+				AsyncStorage.removeItem('survey');
+			}
+    }
+  };
+
+  componentDidMount = () => NetInfo.addEventListener('connectionChange', this.handleConnectionChange);
+
   render() {
     return (
       <View style={styles.container}>

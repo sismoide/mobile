@@ -3,21 +3,19 @@ import { Alert, AppRegistry, Button, StyleSheet, View, Text, NetInfo, AsyncStora
 import Config from '../assets/config.js'
 
 // Button Element
-export default class QuakeButton extends Component {
+export default class QuakeButton extends React.Component {
   constructor(props) {
     super(props);
     {/* make `this` available to `onPressQuake` */}
     this._onPressButtonQuake = this._onPressButtonQuake.bind(this);
   }
 
-  _onPressButtonQuake() {
-    var request = {};
-    
-    // Getting location and timestamp
+  _onPressButtonQuake() {    
+    // Getting location and timestamp, creating request
     navigator.geolocation.getCurrentPosition(
 			(pos) => {
 				const crd = pos.coords;
-				request = {
+				const report = {
 					method: 'POST',
 					headers: {
 						Accept: 'application/json',
@@ -31,23 +29,22 @@ export default class QuakeButton extends Component {
 						timestamp: `${new Date(Date.now()).toISOString()}`
 					}),
 				}
+				
+				NetInfo.getConnectionInfo().then((connectionInfo) => {
+					if (connectionInfo.type == 'none') {
+						AsyncStorage.setItem('quakeReport',JSON.stringify(report));
+					} else {
+					  try{
+					    fetch(Config.SERVER_URL, report);
+					  } catch (error) {
+					    //error 
+					  }
+					}
+				});
 			},
 			(error) => console.log(error.message),
 			{}
     );
-    
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-      if (connectionInfo.type == 'none') {
-        try {
-          AsyncStorage.setItem('report',JSON.stringify(request));
-				} catch (error) {
-					// Error saving data
-				}
-      } else {
-        console.log("sent");
-        fetch(Config.SERVER_URL, request);
-      }
-    });
     
     // advancing to survey
     this.props.navigation.navigate('Survey');
