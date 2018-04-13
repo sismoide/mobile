@@ -14,11 +14,19 @@ class Home extends React.Component {
 			const quakeReport = AsyncStorage.getItem('quakeReport');
 			const survey = AsyncStorage.getItem('survey');
 			if (quakeReport != null) {
-				//Alert.alert(quakeReport);
+				try{
+					fetch(Config.SERVER_URL, quakeReport);
+				} catch (error) {
+					//error 
+				}
 				AsyncStorage.removeItem('quakeReport');
 			}
 			if (survey != null) {
-				//Alert.alert(survey);
+				try{
+					fetch(Config.SERVER_URL, survey);
+				} catch (error) {
+					//error 
+				}
 				AsyncStorage.removeItem('survey');
 			}
     }

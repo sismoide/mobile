@@ -56,7 +56,28 @@ export default class Survey extends React.Component {
       binarySearchMid: mid
     });
     if (lo >= hi) {
-      this.setState({ 
+      const survey = {
+				method: 'PATCH',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					intensity: this.questions[mid].intensity
+				}),
+		  }
+		  NetInfo.getConnectionInfo().then((connectionInfo) => {
+				if (connectionInfo.type == 'none') {
+					AsyncStorage.setItem('survey',JSON.stringify(survey));
+				} else {
+					try{
+						fetch(Config.SERVER_URL, survey);
+					} catch (error) {
+						//error 
+					}
+				}
+			});
+      this.setState({
         surveyResults: { intensity: this.questions[mid].intensity } 
       });
     }
