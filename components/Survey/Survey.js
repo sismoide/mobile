@@ -65,7 +65,8 @@ export default class Survey extends React.Component {
   onDismissSurvey = () => {
     this.setState({
       surveyIsOngoing: false
-    })
+    });
+    this.props.navigation.navigate('Home');
   }
 
   modalShouldBeVisible = (questionIndex) => {
