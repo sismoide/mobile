@@ -2,14 +2,14 @@ import { AsyncStorage } from 'react-native';
 
 const QUAKE_REPORTS_KEY = '@QuakeReports:all';
 
-export default class Storage {
+export default {
   /**
    * Store a quake report
    *
    * @param { Object } - geolocation: Where the quake submission is coming from.
    * @returns { Promise }
    */
-  async submitQuakeReport(geolocation) {
+  submitQuakeReport: async function() {
     let existingReports = null;
     try {
       // Check whether there are previous quake submissions.
@@ -34,20 +34,16 @@ export default class Storage {
         QUAKE_REPORTS_KEY,
         JSON.stringify([ createReport(geolocation) ]));
     }
-  }
+  },
 
   /**
    * @returns { Promise }: All recorded quake reports
    */
-  async getQuakeReports() {
+  getQuakeReports: async function() {
     try {
       return JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
     } catch(error) {
       return [];
     }
-  }
-
-  submitSurvey(intensity) {
-
   }
 }

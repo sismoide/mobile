@@ -6,11 +6,9 @@ import QuakeButton from './components/QuakeButton.js';
 import BaseStyle from './styles/base.js';
 import navigationOptions from './styles/navigation_options.js';
 
-import Storage from './database/storage.js';
-
 class Home extends React.Component {
   static navigationOptions = navigationOptions;
-  
+
   render() {
     return (
       <View style={styles.container}>
