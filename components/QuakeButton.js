@@ -1,6 +1,34 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text, NetInfo, AsyncStorage } from 'react-native';
-import Config from '../assets/config.js'
+import Config from '../assets/config.js';
+
+function button_success(pos) {
+	const crd = pos.coords;
+	const quake = {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			coordinates: {
+				latitude: `${crd.latitude}`,
+				longitude: `${crd.longitude}`
+			},
+			timestamp: `${new Date(Date.now()).toISOString()}`
+		}),
+	};
+	
+	NetInfo.getConnectionInfo().then((connectionInfo) => {
+		if (connectionInfo.type == 'none') {
+		  try {	AsyncStorage.setItem('quake', JSON.stringify(quake)) }
+		  catch (error) {  }
+		} else {
+			try{ fetch(Config.SERVER_URL, quake) }
+			catch (error) {  }
+		}
+	});
+}
 
 // Button Element
 export default class QuakeButton extends React.Component {
@@ -13,35 +41,7 @@ export default class QuakeButton extends React.Component {
   _onPressButtonQuake() {    
     // Getting location and timestamp, creating request
     navigator.geolocation.getCurrentPosition(
-			(pos) => {
-				const crd = pos.coords;
-				const report = {
-					method: 'POST',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						coordinates: {
-							latitude: `${crd.latitude}`,
-							longitude: `${crd.longitude}`
-						},
-						timestamp: `${new Date(Date.now()).toISOString()}`
-					}),
-				}
-				
-				NetInfo.getConnectionInfo().then((connectionInfo) => {
-					if (connectionInfo.type == 'none') {
-						AsyncStorage.setItem('quakeReport',JSON.stringify(report));
-					} else {
-					  try{
-					    fetch(Config.SERVER_URL, report);
-					  } catch (error) {
-					    //error 
-					  }
-					}
-				});
-			},
+			button_success,
 			(error) => console.log(error.message),
 			{}
     );
