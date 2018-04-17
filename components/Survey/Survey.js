@@ -56,10 +56,20 @@ export default class Survey extends React.Component {
       binarySearchMid: mid
     });
     if (lo >= hi) {
+      const surveyResults = { intensity: this.questions[mid].intensity }
       this.setState({ 
-        surveyResults: { intensity: this.questions[mid].intensity } 
+        surveyResults: surveyResults
       });
+      this.onSurveyCompleted(surveyResults);
     }
+  }
+
+   
+  /**
+   * Triggered when survey results are available.
+   * @param { Object } - surveyResults: the survey results.
+   */
+  onSurveyCompleted = (surveyResults) => {
   }
 
   onDismissSurvey = () => {
@@ -86,7 +96,7 @@ export default class Survey extends React.Component {
    */
   showModal = () => {
     if (this.state.surveyResults !== null) {
-      // If `surveyResults` exist, then the survey was completed.
+      // If `surveyResults` exists, then the survey was completed.
       return( 
         <SurveyCompleteModal 
           intensity={ this.state.surveyResults.intensity }

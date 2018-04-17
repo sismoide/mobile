@@ -9,7 +9,7 @@ export default {
    * @param { Object } - geolocation: Where the quake submission is coming from.
    * @returns { Promise }
    */
-  submitQuakeReport: async function() {
+  submitQuakeReport: async function(geolocation) {
     let existingReports = null;
     try {
       // Check whether there are previous quake submissions.
