@@ -1,10 +1,12 @@
+import uuid from 'uuid/v1';
 import { AsyncStorage } from 'react-native';
 
 const QUAKE_REPORTS_KEY = '@QuakeReports:all';
+const QUAKE_INTENSITIES_KEY = '@QuakeIntensities:all';
 
 export default {
   /**
-   * Store a quake report
+   * Store a quake report.
    *
    * @param { Object } - geolocation: Where the quake submission is coming from.
    * @returns { Promise }
@@ -19,7 +21,8 @@ export default {
     const createReport = function(geolocation) {
       return {
         timestamp: `${ Date.now() }`,
-        geolocation: geolocation
+        coordinates: geolocation,
+        id: uuid()
       }
     };
     if (existingReports) {
@@ -42,18 +45,53 @@ export default {
    * @param intensity
    * @throws { String } - When there are no reports at all.
    */
-  patchLatestQuakeIntensity: async function(intensity) {
+  submitLatestQuakeIntensity: async function(intensity) {
+    let allReports = null;
     try {
       allReports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
-    } catch(error) {
+    } catch (error) {
       throw 'Can\'t patch intensity because there are no reports';
     }
     let latestReport = allReports.slice(-1)[0];
-    latestReport.intensity = intensity;
-    return AsyncStorage.setItem(
-      QUAKE_REPORTS_KEY,
-      JSON.stringify(allReports)
-    );
+    return this.submitQuakeIntensity(latestReport.id, intensity);
+  },
+
+  /**
+   * Creates an intensity entry associated with an intensity and a quake report.
+   *
+   * @param quakeReportId
+   * @param intensity
+   * @returns {undefined}
+   */
+  submitQuakeIntensity: async function(quakeReportId, intensity) {
+    let allIntensities = null;
+    try {
+      allIntensities = JSON.parse(await AsyncStorage.getItem(QUAKE_INTENSITIES_KEY));
+    } catch (error) { }
+    const createIntensityEntry = function(quakeReportId, intensity) {
+      return {
+        quakeId: quakeReportId,
+        intensity: intensity
+      };
+    }
+    if (allIntensities) {
+      allIntensities.push(createIntensityEntry(quakeReportId, intensity));
+      return AsyncStorage.setItem(
+        QUAKE_INTENSITIES_KEY,
+        JSON.stringify(allIntensities));
+    } else {
+      return AsyncStorage.setItem(
+        QUAKE_INTENSITIES_KEY,
+        JSON.stringify([ createIntensityEntry(quakeReportId, intensity) ]));
+    }
+  },
+
+  getIntensities: async function() {
+    try {
+      return JSON.parse(await AsyncStorage.getItem(QUAKE_INTENSITIES_KEY));
+    } catch (error) {
+      return [];
+    }
   },
 
   /**
@@ -69,5 +107,9 @@ export default {
 
   clearQuakeReports: async function() {
     return AsyncStorage.removeItem(QUAKE_REPORTS_KEY);
-  }
+  },
+
+  clearIntensities: async function() {
+    return AsyncStorage.removeItem(QUAKE_INTENSITIES_KEY);
+  },
 }
