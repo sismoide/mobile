@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
 import Config from '../assets/config.js'
-import Storage from '../database/storage.js';
 
 // Button Element
 export default class QuakeButton extends Component {
