@@ -37,6 +37,26 @@ export default {
   },
 
   /**
+   * Updates the latest quake report with an intensity. 
+   *
+   * @param intensity
+   * @throws { String } - When there are no reports at all.
+   */
+  patchLatestQuakeIntensity: async function(intensity) {
+    try {
+      allReports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
+    } catch(error) {
+      throw 'Can\'t patch intensity because there are no reports';
+    }
+    let latestReport = allReports.slice(-1)[0];
+    latestReport.intensity = intensity;
+    return AsyncStorage.setItem(
+      QUAKE_REPORTS_KEY,
+      JSON.stringify(allReports)
+    );
+  },
+
+  /**
    * @returns { Promise }: All recorded quake reports
    */
   getQuakeReports: async function() {
@@ -45,5 +65,9 @@ export default {
     } catch(error) {
       return [];
     }
+  },
+
+  clearQuakeReports: async function() {
+    return AsyncStorage.removeItem(QUAKE_REPORTS_KEY);
   }
 }
