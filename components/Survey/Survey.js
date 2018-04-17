@@ -56,6 +56,10 @@ export default class Survey extends React.Component {
       binarySearchMid: mid
     });
     if (lo >= hi) {
+      this.setState({
+        surveyResults: { intensity: this.questions[mid].intensity } 
+      });
+      
       const survey = {
 				method: 'PATCH',
 				headers: {
@@ -63,23 +67,19 @@ export default class Survey extends React.Component {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					intensity: this.questions[mid].intensity
+					intensity: this.state.surveyResults.intensity
 				}),
 		  }
+		  
 		  NetInfo.getConnectionInfo().then((connectionInfo) => {
 				if (connectionInfo.type == 'none') {
-					AsyncStorage.setItem('survey',JSON.stringify(survey));
+					try {	AsyncStorage.setItem('survey', JSON.stringify(survey)) }
+					catch (error) {  }
 				} else {
-					try{
-						fetch(Config.SERVER_URL, survey);
-					} catch (error) {
-						//error 
-					}
+					try{ fetch(Config.SERVER_URL, survey) }
+					catch (error) {  }
 				}
 			});
-      this.setState({
-        surveyResults: { intensity: this.questions[mid].intensity } 
-      });
     }
   }
 

@@ -22,6 +22,15 @@ class Home extends React.Component {
             catch (error) {  }
           }
         });
+        AsyncStorage.getItem('survey').then((survey) => {
+          if (survey != null) {
+            try {
+              fetch(Config.SERVER_URL, JSON.parse(survey));
+              AsyncStorage.removeItem('survey');
+            }
+            catch (error) {  }
+          }
+        });
       }
       catch (error) {  }
     }
