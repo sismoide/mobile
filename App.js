@@ -1,13 +1,42 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+
 import Survey from './components/Survey/Survey.js';
 import QuakeButton from './components/QuakeButton.js';
-import BaseStyle from './styles/base.js';
+import Storage from './database/storage.js';
+import Config from './config';
 import navigationOptions from './styles/navigation_options.js';
+import moment from 'moment-timezone';
 
 class Home extends React.Component {
   static navigationOptions = navigationOptions;
+
+  constructor(props) {
+    super(props);
+    /* Start fetching the latest quake submission. Show `...` in the meantime */
+    this.state = {
+      lastQuakeSubmission: "..."
+    }
+    this.getLatestQuakeSubmissionDate()
+      .then((date) => {
+        this.setState({ lastQuakeSubmission: date });
+      });
+  }
+
+  /**
+   * @returns { String } A formatted, locale aware date string of 
+   * the last time a quake was submitted.
+   */
+  getLatestQuakeSubmissionDate = async () => {
+    try {
+      return moment(Number(await Storage.getLatestQuakeSubmissionTimestamp()))
+        .tz(Config.LOCALE)
+        .calendar();
+    } catch (error) {
+      return "nunca";
+    }
+  }
 
   render() {
     return (
@@ -15,6 +44,7 @@ class Home extends React.Component {
         {/* pass navigation so that QuakeButton can handle navigation
             itself */}
         <QuakeButton navigation={ this.props.navigation }/>
+        <Text style={ { padding: 40 } }>La última vez que reportaste un sismo fue: { this.state.lastQuakeSubmission }</Text>
       </View>
     );
   }
@@ -26,7 +56,7 @@ export default StackNavigator(
       screen: Home
     },
     Survey: {
-      screen: Survey 
+      screen: Survey
     },
   },
   {

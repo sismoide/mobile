@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
-import Config from '../assets/config.js'
+import Config from '../config';
 
-// Button Element
 export default class QuakeButton extends Component {
   _onPressButtonQuake = () => {
     navigator.geolocation.getCurrentPosition(

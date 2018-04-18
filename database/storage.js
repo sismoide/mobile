@@ -86,6 +86,23 @@ export default {
     }
   },
 
+  /**
+   * @returns { (String | null) } UNIX timestamp or null if no records found.
+   */
+  getLatestQuakeSubmissionTimestamp: async function() {
+    let reports = null;
+    try {
+      reports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
+    } catch (error) { }
+    if (reports) {
+      return reports.slice(-1)[0].timestamp;
+    }
+    return null;
+  },
+
+  /**
+   * @returns { Array } Quake intensities
+   */
   getIntensities: async function() {
     try {
       return JSON.parse(await AsyncStorage.getItem(QUAKE_INTENSITIES_KEY));
