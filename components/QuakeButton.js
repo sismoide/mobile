@@ -41,25 +41,11 @@ export default class QuakeButton extends Component {
   
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={ this._onPressButtonQuake }
-            title="Temblor?"
-            color="#ff0000"
-          />
-        </View>
-      </View>
+      <Button
+        onPress={ this._onPressButtonQuake }
+        title="Temblor?"
+        color="#ff0000"
+      />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    margin: 20
-  }
-})
