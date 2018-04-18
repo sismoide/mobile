@@ -4,15 +4,7 @@ import Config from '../assets/config.js'
 
 // Button Element
 export default class QuakeButton extends Component {
-  constructor(props) {
-    super(props);
-    {/* make `this` available to `onPressQuake` */}
-    this._onPressButtonQuake = this._onPressButtonQuake.bind(this);
-  }
-
-  _onPressButtonQuake() {
-  
-    // Getting location and timestamp,sending it to server
+  _onPressButtonQuake = () => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const crd = pos.coords;
@@ -34,8 +26,6 @@ export default class QuakeButton extends Component {
       (error) => alert(error.message),
       {}
     );
-    
-    // advancing to survey
     this.props.navigation.navigate('Survey');
   }
   
