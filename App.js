@@ -8,6 +8,7 @@ import navigationOptions from './styles/navigation_options.js';
 
 class Home extends React.Component {
   static navigationOptions = navigationOptions;
+
   render() {
     return (
       <View style={styles.container}>
