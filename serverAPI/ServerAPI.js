@@ -1,4 +1,4 @@
-import Config from './config.js';
+import Config from '../config/index.js';
 
 export default {
   postQuake: function(body) {
@@ -12,7 +12,11 @@ export default {
     };
     
     try {
-      fetch(Config.SERVER_URL, quake);
+      fetch(Config.SERVER_URL, quake)
+	    .then((response) => response.json())
+        .then((responseJson) => {
+           console.log(responseJson.id);
+        });
     } catch (error) {
       throw "ConnectionError";
     }

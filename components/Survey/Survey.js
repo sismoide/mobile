@@ -4,8 +4,9 @@ import SurveyQuestionModal from './SurveyQuestionModal.js';
 import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
 import navigationOptions from '../../styles/navigation_options.js';
-import Config from '../../assets/config.js';
+import Config from '../../config/index.js';
 import Sync from '../Synchronizer.js';
+import Storage from "../../database/Storage.js";
 
 /**
  * @param {Object} - navigationOptions: original navigation options object.
@@ -64,18 +65,13 @@ export default class Survey extends React.Component {
       this.onSurveyCompleted(surveyResults);
     }
   }
-  
-  onSurveyCompleted = (surveyResults) => {
-	Storage.submitLatestQuakeIntensity(surveyResults);
-    Sync.onDataChange();
-  }
-
    
   /**
    * Triggered when survey results are available.
    * @param { Object } - surveyResults: the survey results.
    */
   onSurveyCompleted = (surveyResults) => {
+	Storage.submitLatestQuakeIntensity(surveyResults).then(() => { Sync.onDataChange() })
   }
 
   onDismissSurvey = () => {

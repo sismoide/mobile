@@ -2,81 +2,104 @@ import { NetInfo, AsyncStorage } from 'react-native';
 import ServerAPI from "../serverAPI/ServerAPI.js";
 import Storage from "../database/Storage.js";
 
-const LAST_QUAKE_KEY = 'lastQuakeSent';
-const LAST_SURVEY_KEY = 'lastSurveySent';
+const LAST_QUAKE_KEY = '@QuakeReports:last';
+const LAST_SURVEY_KEY = '@QuakeIntensities:last';
 
-var Sync = (async function() {
+var Sync = (function() {
+	var fst = true;
 	var connectionType = 'none';
-	var lastQuakeSent = await AsyncStorage.getItem(LAST_QUAKE_KEY);
-	var lastSurveySent = await AsyncStorage.getItem(LAST_SURVEY_KEY);
+	var lastQuakeSent = null;
+	var lastSurveySent = null;
 	
-	function changeConnectionType(type) {
+	async function changeConnectionType(type) {
+		lastQuakeSent = JSON.parse(await AsyncStorage.getItem(LAST_QUAKE_KEY));
+		lastSurveySent = JSON.parse(await AsyncStorage.getItem(LAST_SURVEY_KEY));
 		connectionType = type;
 	}
 	
-	async function sendQuakes() {
-		var quakeList = await Storage.getQuakeReports();
-		if (quakeList && connectionType != 'none') {
-			if (lastQuakeSent) {
-				const lastSentIndex = quakeList.lastIndexOf(lastQuakeSent);
-				quakeList = quakeList.slice(lastSentIndex+1);
-			}
-			if (quakeList != []) {
-				quakeList.map( function(report) {
+	function sendQuakes() {
+		Storage.getQuakeReports().then(async (quakeList) => {
+			if (quakeList && quakeList != [] && connectionType != 'none') {
+				let toSend = 0;
+				const nQuakes = quakeList.length;
+				if (lastQuakeSent) {
+					for (var i = nQuakes-1; i >=0; i--) {
+						if (JSON.stringify(quakeList[i]) ==
+						    JSON.stringify(lastQuakeSent)) {
+							break;
+						} else { toSend++; }
+					}
+				} else {
+					toSend++;
+				}
+				for (var i = nQuakes-toSend; i<nQuakes; i++) {
 					try {
-						ServerAPI.postQuake(report);
-						lastQuakeSent = report;
+						ServerAPI.postQuake(quakeList[i]);
+						lastQuakeSent = quakeList[i];
 						await AsyncStorage.setItem(
 							LAST_QUAKE_KEY,
-							JSON.stringify(report));
+							JSON.stringify(lastQuakeSent));
 					}
-					catch (error) { throw 'Failed to send quake' }
-				});
+					catch (error) {
+						throw 'Failed to send quake';
+					}
+				}
+			} else if (!quakeList || quakeList == []) {
+				console.log('Failed to send quake report: No reports?');
+			} else {
+				throw('Failed to send quake report: No connection');
 			}
-		} else if (!quakeList) {
-			console.log('Failed to send quake report: No reports?');
-		} else {
-			throw('Failed to send quake report: No connection');
-		}
+		}).catch(()=>{});
 	}
 	
-	async function sendSurveys() {
-		var surveyList = await Storage.getIntensities();
-		if (surveyList && connectionType != 'none') {
-			if (lastSurveySent) {
-				const lastSentIndex = surveyList.lastIndexOf(lastSurveySent);
-				surveyList = surveyList.slice(lastSentIndex+1);
-			}
-			if (surveyList != []) {
-				surveyList.map( function(intensity) {
+	function sendSurveys() {
+		Storage.getIntensities().then(async (surveyList) => {
+			if (surveyList && surveyList != [] && connectionType != 'none') {
+				let toSend = 0;
+				const nSurveys = surveyList.length;
+				if (lastSurveySent) {
+					for (var i = nSurveys-1; i >=0; i--) {
+						if (JSON.stringify(surveyList[i]) ==
+						    JSON.stringify(lastSurveySent)) {
+							break;
+						} else { toSend++; }
+					}
+				} else {
+					toSend++;
+				}
+				for (var i = nSurveys-toSend; i<nSurveys; i++) {
 					try {
-						ServerAPI.patchSurvey(intensity);
-						lastSurveySent = intensity;
+						ServerAPI.patchSurvey(surveyList[i]);
+						lastSurveySent = surveyList[i];
 						await AsyncStorage.setItem(
 							LAST_SURVEY_KEY,
-							JSON.stringify(intensity));
+							JSON.stringify(lastSurveySent));
 					}
-					catch (error) { throw 'Failed to send survey' }
-				});
+					catch (error) {
+						throw 'Failed to send quake';
+					}
+				}
+			} else if (!surveyList || surveyList == []) {
+				console.log('No intensities to send');
+			} else {
+				throw('Failed to send intensities: No connection');
 			}
-		} else if (!surveyList) {
-			console.log('Failed to send intensities: No intensities');
-		} else {
-			throw('Failed to send intensities: No connection');
-		}
+		}).catch(()=>{});
 	}
 	
 	return{
-		connectionHandler: async function(connectionInfo) {
-			changeConnectionType(connectionInfo.type);
-			if (connectionType != 'none') {
-				await onDataChange();
-			}
+		connectionHandler: function(connectionInfo) {
+			changeConnectionType(connectionInfo.type).then(() => {
+				if (connectionType != 'none') {
+					onDataChange();
+				}
+			}).catch(() => {});
 		},
 		
-		onDataChange: async function() {
-			await sendQuakes();
-			await sendSurveys();
+		onDataChange: function() {
+			console.log("Connection Type: "+connectionType);
+			sendQuakes();
+			sendSurveys();
 		},
 	}
 })()

@@ -20,7 +20,7 @@ export default {
     } catch (error) { }
     const createReport = function(geolocation) {
       return {
-        timestamp: `${ new Date().toISOString() }`,
+        created_on: `${ new Date().toISOString() }`,
         coordinates: geolocation,
         id: uuid()
       }
@@ -46,6 +46,7 @@ export default {
    * @throws { String } - When there are no reports at all.
    */
   submitLatestQuakeIntensity: async function(intensity) {
+	console.log(intensity)
     let allReports = null;
     try {
       allReports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));

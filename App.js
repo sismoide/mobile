@@ -4,16 +4,14 @@ import { StackNavigator } from 'react-navigation';
 
 import Survey from './components/Survey/Survey.js';
 import QuakeButton from './components/QuakeButton.js';
-import Storage from './database/storage.js';
+import Storage from './database/Storage.js';
 import Config from './config';
 import navigationOptions from './styles/navigation_options.js';
-import Sync from "./components/Synchronizer.js"
+import Sync from './components/Synchronizer.js';
 import moment from 'moment-timezone';
 
 class Home extends React.Component {  
   static navigationOptions = navigationOptions;
-  
-  componentDidMount = () => NetInfo.addEventListener('connectionChange', Sync.connectionHandler);
 
   constructor(props) {
     super(props);
@@ -25,7 +23,9 @@ class Home extends React.Component {
       .then((date) => {
         this.setState({ lastQuakeSubmission: date });
       });
-  }
+  };
+  
+  componentDidMount = () => NetInfo.addEventListener('connectionChange', Sync.connectionHandler);
 
   /**
    * @returns { String } A formatted, locale aware date string of 
