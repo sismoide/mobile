@@ -1,10 +1,11 @@
 import React from 'react';
-import { Dimensions, Modal, Text, View, Image } from 'react-native';
+import { Dimensions, Modal, Text, View, Image, NetInfo, AsyncStorage } from 'react-native';
 import SurveyQuestionModal from './SurveyQuestionModal.js';
 import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
 import navigationOptions from '../../styles/navigation_options.js';
-
+import Config from '../../assets/config.js';
+import Sync from '../Synchronizer.js';
 
 /**
  * @param {Object} - navigationOptions: original navigation options object.
@@ -56,31 +57,17 @@ export default class Survey extends React.Component {
       binarySearchMid: mid
     });
     if (lo >= hi) {
+      const surveyResults = { intensity: this.questions[mid].intensity };
       this.setState({
-        surveyResults: { intensity: this.questions[mid].intensity } 
+        surveyResults: surveyResults
       });
-      
-      const survey = {
-				method: 'PATCH',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					intensity: this.state.surveyResults.intensity
-				}),
-		  }
-		  
-		  NetInfo.getConnectionInfo().then((connectionInfo) => {
-				if (connectionInfo.type == 'none') {
-					try {	AsyncStorage.setItem('survey', JSON.stringify(survey)) }
-					catch (error) {  }
-				} else {
-					try{ fetch(Config.SERVER_URL, survey) }
-					catch (error) {  }
-				}
-			});
+      this.onSurveyCompleted(surveyResults)
     }
+  }
+  
+  onSurveyCompleted = (surveyResults) => {
+	Storage.submitLatestQuakeIntensity(surveyResults);
+    Sync.onDataChange();
   }
 
   onDismissSurvey = () => {
@@ -95,9 +82,7 @@ export default class Survey extends React.Component {
     return this.state.surveyIsOngoing 
         && this.state.binarySearchMid === questionIndex;
   }
-    
-
-
+  
   /**
    * Depending on whether the survey is complete or not,
    * renders either a question modal or the final modal that tells

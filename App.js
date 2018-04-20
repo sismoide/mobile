@@ -5,38 +5,12 @@ import Survey from './components/Survey/Survey.js';
 import QuakeButton from './components/QuakeButton.js';
 import BaseStyle from './styles/base.js';
 import navigationOptions from './styles/navigation_options.js';
-import Config from './assets/config.js';
+import Sync from "./components/Synchronizer.js"
 
 class Home extends React.Component {  
   static navigationOptions = navigationOptions;
   
-  handleConnectionChange(connectionInfo) {
-    if (connectionInfo.type != 'none') {
-      try {
-        AsyncStorage.getItem('quake').then((quake) => {
-          if (quake != null) {
-            try {
-              fetch(Config.SERVER_URL, JSON.parse(quake));
-              AsyncStorage.removeItem('quake');
-            }
-            catch (error) {  }
-          }
-        });
-        AsyncStorage.getItem('survey').then((survey) => {
-          if (survey != null) {
-            try {
-              fetch(Config.SERVER_URL, JSON.parse(survey));
-              AsyncStorage.removeItem('survey');
-            }
-            catch (error) {  }
-          }
-        });
-      }
-      catch (error) {  }
-    }
-  };
-
-  componentDidMount = () => NetInfo.addEventListener('connectionChange', this.handleConnectionChange);
+  componentDidMount = () => NetInfo.addEventListener('connectionChange', Sync.connectionHandler);
 
   render() {
     return (
@@ -55,7 +29,7 @@ export default StackNavigator(
       screen: Home
     },
     Survey: {
-      screen: Survey 
+      screen: Survey
     },
   },
   {
