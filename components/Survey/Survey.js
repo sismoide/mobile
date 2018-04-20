@@ -61,7 +61,7 @@ export default class Survey extends React.Component {
       this.setState({
         surveyResults: surveyResults
       });
-      this.onSurveyCompleted(surveyResults)
+      this.onSurveyCompleted(surveyResults);
     }
   }
   
@@ -70,10 +70,19 @@ export default class Survey extends React.Component {
     Sync.onDataChange();
   }
 
+   
+  /**
+   * Triggered when survey results are available.
+   * @param { Object } - surveyResults: the survey results.
+   */
+  onSurveyCompleted = (surveyResults) => {
+  }
+
   onDismissSurvey = () => {
     this.setState({
       surveyIsOngoing: false
-    })
+    });
+    this.props.navigation.navigate('Home');
   }
 
   modalShouldBeVisible = (questionIndex) => {
@@ -91,7 +100,7 @@ export default class Survey extends React.Component {
    */
   showModal = () => {
     if (this.state.surveyResults !== null) {
-      // If `surveyResults` exist, then the survey was completed.
+      // If `surveyResults` exists, then the survey was completed.
       return( 
         <SurveyCompleteModal 
           intensity={ this.state.surveyResults.intensity }
