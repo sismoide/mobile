@@ -7,18 +7,18 @@ import Config from '../config/index.js';
 // Button Element
 export default class QuakeButton extends Component {
   _onPressButtonQuake = async ()  => {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
-				async (pos) => {
-				  Storage.submitQuakeReport({
-					latitude: `${ pos.coords.latitude }`,
-					longitude: `${ pos.coords.longitude }`
-				  }).then(() => { Sync.onDataChange() })
-				}
-			);
-		} else {
-			Alert.alert("Geolocalización desactivada. Función no Disponible");
-		}
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          Storage.submitQuakeReport({
+            latitude: `${ pos.coords.latitude }`,
+					  longitude: `${ pos.coords.longitude }`
+          }).then(() => { Sync.onDataChange() })
+        }
+      );
+    } else {
+      Alert.alert("Geolocalización desactivada. Función no Disponible");
+    }
     // advancing to survey
     this.props.navigation.navigate('Survey');
   }

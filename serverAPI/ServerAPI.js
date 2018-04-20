@@ -4,18 +4,18 @@ export default {
   postQuake: function(body) {
     const quake = {
       method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(body)
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body)
     };
     
     try {
       fetch(Config.SERVER_URL, quake)
-	    .then((response) => response.json())
+        .then((response) => response.json())
         .then((responseJson) => {
-           console.log(responseJson.id);
+          console.log(responseJson.id);
         });
     } catch (error) {
       throw "ConnectionError";
