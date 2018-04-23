@@ -62,7 +62,7 @@ export default class Survey extends React.Component {
       this.setState({
         surveyResults: surveyResults
       });
-      this.onSurveyCompleted(surveyResults);
+      this.onSurveyCompleted( surveyResults.intensity );
     }
   }
    

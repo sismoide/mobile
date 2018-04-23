@@ -11,15 +11,11 @@ export default {
       body: JSON.stringify(body)
     };
     
-    try {
-      fetch(Config.SERVER_URL, quake)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          console.log(responseJson.id);
-        });
-    } catch (error) {
-      throw "ConnectionError";
-    }
+    fetch(Config.SERVER_URL, quake)
+      .then((response) => response.json())
+      .then((responseJson) => {
+		return responseJson.id;
+      });
   },
   
   patchSurvey: function(body) {
@@ -28,11 +24,8 @@ export default {
       body: JSON.stringify(body)
     };
     
-    try {
-      fetch(Config.SERVER_URL, survey);
-    } catch (error) {
-      throw "ConnectionError";
-    }
+    fetch(Config.SERVER_URL+body.id, survey)
+	  .then(() => {});
   },
   
   setAccount: function() {},

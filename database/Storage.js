@@ -22,7 +22,7 @@ export default {
       return {
         created_on: `${ new Date().toISOString() }`,
         coordinates: geolocation,
-        id: uuid()
+        quakeId: uuid(),
       }
     };
     if (existingReports) {
@@ -46,7 +46,6 @@ export default {
    * @throws { String } - When there are no reports at all.
    */
   submitLatestQuakeIntensity: async function(intensity) {
-	console.log(intensity)
     let allReports = null;
     try {
       allReports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
@@ -54,7 +53,7 @@ export default {
       throw 'Can\'t patch intensity because there are no reports';
     }
     let latestReport = allReports.slice(-1)[0];
-    return this.submitQuakeIntensity(latestReport.id, intensity);
+    return this.submitQuakeIntensity(latestReport.quakeId, intensity);
   },
 
   /**
@@ -86,7 +85,21 @@ export default {
         JSON.stringify([ createIntensityEntry(quakeReportId, intensity) ]));
     }
   },
-
+  
+  /**
+   * @returns { (String | null) } UNIX timestamp or null if no records found.
+   */
+  getLatestQuakeSubmissionTimestamp: async function() {
+    let reports = null;
+    try {
+      reports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
+    } catch (error) { }
+    if (reports) {
+      return reports.slice(-1)[0].timestamp;
+    }
+    return null;
+},
+  
   getIntensities: async function() {
     try {
       return JSON.parse(await AsyncStorage.getItem(QUAKE_INTENSITIES_KEY));

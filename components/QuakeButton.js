@@ -12,7 +12,7 @@ export default class QuakeButton extends Component {
         async (pos) => {
           Storage.submitQuakeReport({
             latitude: `${ pos.coords.latitude }`,
-					  longitude: `${ pos.coords.longitude }`
+            longitude: `${ pos.coords.longitude }`
           }).then(() => { Sync.onDataChange() })
         }
       );
