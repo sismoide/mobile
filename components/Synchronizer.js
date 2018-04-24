@@ -14,9 +14,6 @@ export default (function() {
   
   async function setVars(type) {
     connectionType = type;
-	AsyncStorage.removeItem(LAST_QUAKE_POS_KEY);
-	AsyncStorage.removeItem(LAST_SURVEY_POS_KEY);
-	AsyncStorage.removeItem(ID_DICTIONARY);
     quakePos = await AsyncStorage.getItem(LAST_QUAKE_POS_KEY);
     surveyPos = await AsyncStorage.getItem(LAST_SURVEY_POS_KEY);
 	ids = await AsyncStorage.getItem(ID_DICTIONARY);
