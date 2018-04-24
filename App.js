@@ -42,6 +42,8 @@ class Home extends React.Component {
   }
 
   render() {
+	Storage.clearQuakeReports();
+	Storage.clearIntensities();
     return (
       <View style={styles.container}>
         {/* pass navigation so that QuakeButton can handle navigation

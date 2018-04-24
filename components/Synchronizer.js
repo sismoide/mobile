@@ -14,12 +14,15 @@ export default (function() {
   
   async function setVars(type) {
     connectionType = type;
+	AsyncStorage.removeItem(LAST_QUAKE_POS_KEY);
+	AsyncStorage.removeItem(LAST_SURVEY_POS_KEY);
+	AsyncStorage.removeItem(ID_DICTIONARY);
     quakePos = await AsyncStorage.getItem(LAST_QUAKE_POS_KEY);
     surveyPos = await AsyncStorage.getItem(LAST_SURVEY_POS_KEY);
-//	ids = await AsyncStorage.getItem(ID_DICTIONARY);
+	ids = await AsyncStorage.getItem(ID_DICTIONARY);
     lastQuakeSentPos = quakePos ? parseInt(quakePos) : -1;
     lastSurveySentPos = surveyPos ? parseInt(surveyPos) : -1;
-//	idDict = ids ? JSON.parse(ids) : {};
+	idDict = (ids ? JSON.parse(ids) : {});	
   }
 	
   function sendQuakes() {
@@ -29,16 +32,18 @@ export default (function() {
         for (let i = 1+lastQuakeSentPos; i<nQuakes; i++) {
           try {
 			let quakeToSend = quakeList[i];
-/*			qId = quakeToSend.quakeId;
-			delete quakeToSend.quakeId;*/
-			ServerAPI.postQuake(quakeToSend);
-            lastQuakeSentPos = i.toString();
+			qId = quakeToSend.quakeId;
+			delete quakeToSend.quakeId;
+			serverId = await ServerAPI.postQuake(quakeToSend);
+			idDict[qId] = serverId;
+			console.log("ServerID: "+serverId);
+			lastQuakeSentPos = i.toString();
             await AsyncStorage.setItem(
               LAST_QUAKE_POS_KEY,
               lastQuakeSentPos);
-/*			await AsyncStorage.setItem(
+			await AsyncStorage.setItem(
 			  ID_DICTIONARY,
-			  idDict.toString());*/
+			  idDict.toString());
           }
           catch (error) {
             throw `Failed to send quake: ${ error }`;
@@ -47,18 +52,22 @@ export default (function() {
       } else if (!quakeList || quakeList == []) {
         console.log('Failed to send quake report: No reports?');
       } else {
-        throw('Failed to send quake report: No connection');
+        /* throw('Failed to send quake report: No connection'); */
       }
     });
   }
-	
+  
   function sendSurveys() {
     Storage.getIntensities().then(async (surveyList) => {
       if (surveyList && surveyList != [] && connectionType != 'none') {
         const nSurveys = surveyList.length;
         for (let i = 1+lastSurveySentPos; i<nSurveys; i++) {
           try {
-            ServerAPI.patchSurvey(surveyList[i]);
+			let surveyToSend = surveyList[i];
+			quakeId = surveyToSend.quakeId;
+			delete surveyToSend.quakeId;
+			serverId = idDict[quakeId];
+			ServerAPI.patchSurvey(surveyList[i], serverId);
             lastSurveySentPos = i.toString();
             await AsyncStorage.setItem(
               LAST_SURVEY_POS_KEY,
@@ -71,7 +80,7 @@ export default (function() {
       } else if (!surveyList || surveyList == []) {
 //        console.log('No intensities to send');
       } else {
-        throw('Failed to send intensities: No connection');
+        /* throw('Failed to send intensities: No connection');*/
       }
     });
   }
