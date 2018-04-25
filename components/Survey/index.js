@@ -1,5 +1,7 @@
 import React from 'react';
+import { NavigationActions } from 'react-navigation';
 import { Dimensions, Modal, Text, View, Image } from 'react-native';
+
 import SurveyQuestionModal from './SurveyQuestionModal.js';
 import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
@@ -76,7 +78,14 @@ export default class Survey extends React.Component {
     this.setState({
       surveyIsOngoing: false
     });
-    this.props.navigation.navigate('Home');
+    /*
+    * Go home and wipe navigation stack, because user
+    * shouldn't be able to come back here.
+    */
+    this.props.navigation.dispatch(NavigationActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({ routeName: 'Home' }) ]
+    }));
   }
 
   modalShouldBeVisible = (questionIndex) => {
