@@ -24,8 +24,20 @@ Correr una instancia del servidor falso. Puedes encontrar `db.json` [aquí](http
 $ json-server db.json
 ```
 
-Generar una build de desarrollo para Expo:
+Dejar corriendo el bundler
 
 ```bash
-yarn start
+$ react-native start
 ```
+
+Y correr en android:
+
+```bash
+$ react-native run-android
+```
+
+o en iOS:
+```bash
+$ react-native run-ios
+```
+
