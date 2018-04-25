@@ -1,5 +1,7 @@
 import React from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import Modal from 'react-native-modal';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
 import BaseStyle from './../../styles/base.js';
@@ -14,22 +16,30 @@ export default class SurveyModal extends React.Component {
       <Modal
         animationType="fade"
         transparent={ true }
-        visible={ this.props.visible }
+        isVisible={ this.props.isVisible }
         onRequestClose={() => {}}>
         <View style={{ flexDirection: 'column', flex: 1}}>
           <View style={{ flex: 0.5 }}/>
-          <View style={{ flexDirection: 'row', flex: 1}}>
-            <View style={{ flex: 0.1}}/>
+          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
             <View style={ styles.modalContainer }>
               { this.props.children } 
+              <Text>Si men</Text>
             </View>
           </View>
-          <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+          <View 
+            style={ { 
+              flex: 0.5, 
+              justifyContent: 'center', 
+              alignItems: 'center'
+            } }>
             <TouchableOpacity 
+              style={ { backgroundColor: 'white' }}
               onPress={ () => { this.props.onDismissSurvey() } }>
-              <Icon name="window-close" size={ 50 } color='#000' />
+              <Icon name="window-close" 
+                size={ 50 } 
+                color='#000' />
             </TouchableOpacity>
-          </View>
+					</View>
         </View>
       </Modal>
     );

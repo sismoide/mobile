@@ -109,7 +109,7 @@ export default class Survey extends React.Component {
       return( 
         <SurveyCompleteModal 
           intensity={ this.state.surveyResults.intensity }
-          visible={ this.state.surveyIsOngoing }
+          isVisible={ this.state.surveyIsOngoing }
           onDismissSurvey={ this.onDismissSurvey } />
       );
     }
@@ -119,7 +119,7 @@ export default class Survey extends React.Component {
         question={ question }
         onResponse={ this.onResponse }
         onDismissSurvey= { this.onDismissSurvey }
-        visible={ this.modalShouldBeVisible(index) } />
+        isVisible={ this.modalShouldBeVisible(index) } />
     ))
   }
 
