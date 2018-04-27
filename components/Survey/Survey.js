@@ -6,7 +6,7 @@ import questions from './questions.js';
 import navigationOptions from '../../styles/navigation_options.js';
 import Config from '../../config/index.js';
 import Sync from '../Synchronizer.js';
-import Storage from "../../database/Storage.js";
+import Storage from "../../database/storage.js";
 
 /**
  * @param {Object} - navigationOptions: original navigation options object.

@@ -4,7 +4,7 @@ import { StackNavigator } from 'react-navigation';
 
 import Survey from './components/Survey/Survey.js';
 import QuakeButton from './components/QuakeButton.js';
-import Storage from './database/Storage.js';
+import Storage from './database/storage.js';
 import Config from './config';
 import navigationOptions from './styles/navigation_options.js';
 import Sync from './components/Synchronizer.js';
@@ -33,7 +33,7 @@ class Home extends React.Component {
    */
   getLatestQuakeSubmissionDate = async () => {
     try {
-      return moment(Number(await Storage.getLatestQuakeSubmissionTimestamp()))
+      return moment(await Storage.getLatestQuakeSubmissionTimestamp())
         .tz(Config.LOCALE)
         .calendar();
     } catch (error) {
@@ -42,6 +42,8 @@ class Home extends React.Component {
   }
 
   render() {
+//	Storage.clearQuakeReports();
+//	Storage.clearIntensities();
     return (
       <View style={styles.container}>
         {/* pass navigation so that QuakeButton can handle navigation

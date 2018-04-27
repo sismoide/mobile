@@ -10,14 +10,12 @@ export default {
       },
       body: JSON.stringify(body)
     };
-    console.log(quake);
     let response = await fetch(Config.SERVER_URL, quake);
 	let responseJson = await response.json();
-//	console.log(responseJson);
 	return responseJson.id;
   },
   
-  patchSurvey: function(body, id) {
+  patchSurvey: async function(body, id) {
 //  patchSurvey: function(body) {
     const survey = {
       method: 'PATCH',
@@ -28,9 +26,7 @@ export default {
     };
 	patchUrl = Config.SERVER_URL+id+'/';
     console.log(patchUrl);
-	console.log(survey);
-    fetch(patchUrl, survey)
-	  .then(() => {});
+    await fetch(patchUrl, survey);
   },
   
   setAccount: function() {},

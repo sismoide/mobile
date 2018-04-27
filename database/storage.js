@@ -20,9 +20,9 @@ export default {
     } catch (error) { }
     const createReport = function(geolocation) {
       return {
-        timestamp: `${ Date.now() }`,
+        created_on: `${ (new Date()).toISOString() }`,
         coordinates: geolocation,
-        id: uuid()
+        quakeId: uuid()
       }
     };
     if (existingReports) {
@@ -53,7 +53,7 @@ export default {
       throw 'Can\'t patch intensity because there are no reports';
     }
     let latestReport = allReports.slice(-1)[0];
-    return this.submitQuakeIntensity(latestReport.id, intensity);
+    return this.submitQuakeIntensity(latestReport.quakeId, intensity);
   },
 
   /**
@@ -95,7 +95,7 @@ export default {
       reports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
     } catch (error) { }
     if (reports) {
-      return reports.slice(-1)[0].timestamp;
+      return reports.slice(-1)[0].created_on;
     }
     return null;
   },
