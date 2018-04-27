@@ -32,7 +32,6 @@ export default class Survey extends React.Component {
       binarySearchLo: 0,
       binarySearchHi: this.questions.length - 1,
       binarySearchMid: Math.floor((this.questions.length - 1) / 2),
-      surveyIsOngoing: true, // Survey starts immediately.
       surveyResults: null // No results, since the survey hasn't been completed.
     }
   }
@@ -75,9 +74,6 @@ export default class Survey extends React.Component {
   }
 
   onDismissSurvey = () => {
-    this.setState({
-      surveyIsOngoing: false
-    });
     /*
     * Go home and wipe navigation stack, because user
     * shouldn't be able to come back here.
@@ -91,8 +87,7 @@ export default class Survey extends React.Component {
   modalShouldBeVisible = (questionIndex) => {
     // Don't show anything if the survey was canceled/completed.
     // Dont't show the modal if it's not its turn.
-    return this.state.surveyIsOngoing 
-        && this.state.binarySearchMid === questionIndex;
+    return this.state.binarySearchMid === questionIndex;
   }
     
 
@@ -109,7 +104,7 @@ export default class Survey extends React.Component {
       return( 
         <SurveyCompleteModal 
           intensity={ this.state.surveyResults.intensity }
-          isVisible={ this.state.surveyIsOngoing }
+          isVisible={ true }
           onDismissSurvey={ this.onDismissSurvey } />
       );
     }
