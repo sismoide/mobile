@@ -56,23 +56,22 @@ export default (function() {
   async function sendSurveys() {
     surveyList = await Storage.getIntensities();
     if (!surveyList || surveyList == []) {
-      console.log('No intensities to send');
-    } else {
-      for (let i = 1+lastSurveySentPos; i<surveyList.length; i++) {
-        try {
-          let surveyToSend = surveyList[i];
-          quakeId = surveyToSend.quakeId;
-          delete surveyToSend.quakeId;
-          serverId = quakeToServerId[quakeId];
-          await ServerAPI.patchSurvey(surveyList[i], serverId);
-          lastSurveySentPos = i.toString();
-          await AsyncStorage.setItem(
-            LAST_SURVEY_POS_KEY,
-            lastSurveySentPos);
-        }
-        catch (error) {
-          throw `Failed to send survey: ${ error }`;
-        }
+	  return;
+    } 
+    for (let i = 1+lastSurveySentPos; i<surveyList.length; i++) {
+      try {
+        let surveyToSend = surveyList[i];
+        quakeId = surveyToSend.quakeId;
+        delete surveyToSend.quakeId;
+        serverId = quakeToServerId[quakeId];
+        await ServerAPI.patchSurvey(surveyList[i], serverId);
+        lastSurveySentPos = i.toString();
+        await AsyncStorage.setItem(
+          LAST_SURVEY_POS_KEY,
+          lastSurveySentPos);
+      }
+      catch (error) {
+        throw `Failed to send survey: ${ error }`;
       }
     }
   }
@@ -98,7 +97,7 @@ export default (function() {
       setConnectionType(connectionInfo.type);
       getAsyncStorageData()
       .then(() => {
-        checkConnectionAndSend();
+        return checkConnectionAndSend();
       })
       .then(() => {});
     },

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
-import Sync from "./Synchronizer.js"
+import Synchronizer from "./Synchronizer.js"
 import Storage from "../database/storage.js"
 import Config from '../config/index.js';
 
@@ -13,7 +13,7 @@ export default class QuakeButton extends Component {
           Storage.submitQuakeReport({
             latitude: `${ pos.coords.latitude }`,
             longitude: `${ pos.coords.longitude }`
-          }).then(() => { Sync.onDataChange() })
+          }).then(() => { Synchronizer.onDataChange() })
         }
       );
     } else {

@@ -7,7 +7,7 @@ import QuakeButton from './components/QuakeButton.js';
 import Storage from './database/storage.js';
 import Config from './config';
 import navigationOptions from './styles/navigation_options.js';
-import Sync from './components/Synchronizer.js';
+import Synchronizer from './components/Synchronizer.js';
 import moment from 'moment-timezone';
 
 class Home extends React.Component {  
@@ -25,7 +25,7 @@ class Home extends React.Component {
       });
   };
   
-  componentDidMount = () => NetInfo.addEventListener('connectionChange', Sync.connectionHandler);
+  componentDidMount = () => NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler);
 
   /**
    * @returns { String } A formatted, locale aware date string of 
@@ -42,8 +42,6 @@ class Home extends React.Component {
   }
 
   render() {
-//	Storage.clearQuakeReports();
-//	Storage.clearIntensities();
     return (
       <View style={styles.container}>
         {/* pass navigation so that QuakeButton can handle navigation

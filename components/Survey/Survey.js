@@ -5,7 +5,7 @@ import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
 import navigationOptions from '../../styles/navigation_options.js';
 import Config from '../../config/index.js';
-import Sync from '../Synchronizer.js';
+import Synchronizer from '../Synchronizer.js';
 import Storage from "../../database/storage.js";
 
 /**
@@ -62,7 +62,7 @@ export default class Survey extends React.Component {
       this.setState({
         surveyResults: surveyResults
       });
-      this.onSurveyCompleted( surveyResults.intensity );
+      this.onSurveyCompleted( surveyResults );
     }
   }
    
@@ -71,7 +71,7 @@ export default class Survey extends React.Component {
    * @param { Object } - surveyResults: the survey results.
    */
   onSurveyCompleted = (surveyResults) => {
-	Storage.submitLatestQuakeIntensity(surveyResults).then(() => { Sync.onDataChange() })
+	Storage.submitLatestQuakeIntensity(surveyResults.intensity).then(() => { Synchronizer.onDataChange() })
   }
 
   onDismissSurvey = () => {
