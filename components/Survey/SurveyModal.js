@@ -1,12 +1,13 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { MKButton, MKColor } from 'react-native-material-kit';
+import { MKButton, MKColor, getTheme } from 'react-native-material-kit';
 import Modal from 'react-native-modal';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
 import BaseStyle from './../../styles/base.js';
 
+const theme = getTheme();
 
 export default class SurveyModal extends React.Component {
   render() {
@@ -23,7 +24,7 @@ export default class SurveyModal extends React.Component {
         <View style={{ flexDirection: 'column', flex: 1}}>
           <View style={{ flex: 0.5 }}/>
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-            <View style={ styles.modalContainer }>
+            <View style={ Object.assign({}, theme.cardStyle, { flex: 1 }) }>
               { this.props.children } 
             </View>
           </View>

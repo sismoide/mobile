@@ -27,11 +27,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  button: {
-    flex: 1, 
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
   choiceText: {
     fontWeight: 'bold',
     fontSize: 16,
