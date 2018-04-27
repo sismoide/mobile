@@ -1,10 +1,12 @@
 import React from 'react';
-import { Dimensions, Modal, Text, View, Image } from 'react-native';
+import { Dimensions, Modal, Text, View, Image, NetInfo, AsyncStorage } from 'react-native';
 import SurveyQuestionModal from './SurveyQuestionModal.js';
 import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
 import navigationOptions from '../../styles/navigation_options.js';
-
+import Config from '../../config/index.js';
+import Synchronizer from '../Synchronizer.js';
+import Storage from "../../database/storage.js";
 
 /**
  * @param {Object} - navigationOptions: original navigation options object.
@@ -56,20 +58,20 @@ export default class Survey extends React.Component {
       binarySearchMid: mid
     });
     if (lo >= hi) {
-      const surveyResults = { intensity: this.questions[mid].intensity }
-      this.setState({ 
+      const surveyResults = { intensity: this.questions[mid].intensity };
+      this.setState({
         surveyResults: surveyResults
       });
-      this.onSurveyCompleted(surveyResults);
+      this.onSurveyCompleted( surveyResults );
     }
   }
-
    
   /**
    * Triggered when survey results are available.
    * @param { Object } - surveyResults: the survey results.
    */
   onSurveyCompleted = (surveyResults) => {
+	Storage.submitLatestQuakeIntensity(surveyResults.intensity).then(() => { Synchronizer.onDataChange() })
   }
 
   onDismissSurvey = () => {
@@ -85,9 +87,7 @@ export default class Survey extends React.Component {
     return this.state.surveyIsOngoing 
         && this.state.binarySearchMid === questionIndex;
   }
-    
-
-
+  
   /**
    * Depending on whether the survey is complete or not,
    * renders either a question modal or the final modal that tells

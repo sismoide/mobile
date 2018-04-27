@@ -22,7 +22,7 @@ export default [
     question: 'Es difícil ponerse de pie?' },
   { id: 7, 
     intensity: 8,
-    question: 'Los mueves se han movido completamente de lugar?' },
+    question: 'Los muebles se han movido completamente de lugar?' },
   { id: 8, 
     intensity: 9,
     question: 'Se observan daños importantes en edificios o pánico generalizado?' },

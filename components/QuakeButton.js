@@ -1,30 +1,25 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
-import Config from '../config';
+import Synchronizer from "./Synchronizer.js"
+import Storage from "../database/storage.js"
+import Config from '../config/index.js';
 
+// Button Element
 export default class QuakeButton extends Component {
-  _onPressButtonQuake = () => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const crd = pos.coords;
-        fetch(Config.SERVER_URL, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            coordinates: {
-              latitude: `${crd.latitude.toFixed(6)}`,
-              longitude: `${crd.longitude.toFixed(6)}`
-            },
-            timestamp: `${Date.now()}`
-          }),
-        });
-      },
-      (error) => alert(error.message),
-      {}
-    );
+  _onPressButtonQuake = async ()  => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          Storage.submitQuakeReport({
+            latitude: `${ pos.coords.latitude }`,
+            longitude: `${ pos.coords.longitude }`
+          }).then(() => { Synchronizer.onDataChange() })
+        }
+      );
+    } else {
+      Alert.alert("Geolocalización desactivada. Función no Disponible");
+    }
+    // advancing to survey
     this.props.navigation.navigate('Survey');
   }
   

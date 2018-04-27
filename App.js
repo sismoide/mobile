@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { Alert, StyleSheet, Text, View, Button, NetInfo, AsyncStorage } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 import Survey from './components/Survey/Survey.js';
@@ -7,9 +7,10 @@ import QuakeButton from './components/QuakeButton.js';
 import Storage from './database/storage.js';
 import Config from './config';
 import navigationOptions from './styles/navigation_options.js';
+import Synchronizer from './components/Synchronizer.js';
 import moment from 'moment-timezone';
 
-class Home extends React.Component {
+class Home extends React.Component {  
   static navigationOptions = navigationOptions;
 
   constructor(props) {
@@ -22,7 +23,9 @@ class Home extends React.Component {
       .then((date) => {
         this.setState({ lastQuakeSubmission: date });
       });
-  }
+  };
+  
+  componentDidMount = () => NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler);
 
   /**
    * @returns { String } A formatted, locale aware date string of 
@@ -30,7 +33,7 @@ class Home extends React.Component {
    */
   getLatestQuakeSubmissionDate = async () => {
     try {
-      return moment(Number(await Storage.getLatestQuakeSubmissionTimestamp()))
+      return moment(await Storage.getLatestQuakeSubmissionTimestamp())
         .tz(Config.LOCALE)
         .calendar();
     } catch (error) {
