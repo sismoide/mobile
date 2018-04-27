@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { MKColor } from 'react-native-material-kit';
 import BaseStyle from '../../styles/base.js';
 
 export default StyleSheet.create({
@@ -9,7 +10,7 @@ export default StyleSheet.create({
     borderRadius: 2,
   },
   headerStyle: {
-    backgroundColor: BaseStyle.colors.secondaryBackgroundColor,
+    backgroundColor: MKColor.LightBlue,
     flex: 0.6,
     justifyContent: 'center',
     alignItems: 'center',

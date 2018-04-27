@@ -1,21 +1,23 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { MKButton, MKColor } from 'react-native-material-kit';
 import Modal from 'react-native-modal';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
 import BaseStyle from './../../styles/base.js';
 
-export default class SurveyModal extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
+export default class SurveyModal extends React.Component {
   render() {
     return (
       <Modal
-        animationType="fade"
+        animationIn='slideInRight'
+        animationOut='slideOutLeft'
+        animationInTiming={ 500 }
+        animationOutTiming={ 500 }
         transparent={ true }
+        hideModalContentWhileAnimating={ true }
         isVisible={ this.props.isVisible }
         onRequestClose={() => {}}>
         <View style={{ flexDirection: 'column', flex: 1}}>
@@ -23,7 +25,6 @@ export default class SurveyModal extends React.Component {
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
             <View style={ styles.modalContainer }>
               { this.props.children } 
-              <Text>Si men</Text>
             </View>
           </View>
           <View 
@@ -32,16 +33,26 @@ export default class SurveyModal extends React.Component {
               justifyContent: 'center', 
               alignItems: 'center'
             } }>
-            <TouchableOpacity 
-              style={ { backgroundColor: 'white' }}
-              onPress={ () => { this.props.onDismissSurvey() } }>
-              <Icon name="window-close" 
-                size={ 50 } 
-                color='#000' />
-            </TouchableOpacity>
+            <ExitSurveyButton onPress={ () => this.props.onDismissSurvey() }/>
 					</View>
         </View>
       </Modal>
     );
   }
 }
+
+const ExitSurveyButton = new MKButton.Builder()
+  .withBackgroundColor(MKColor.LightBlue)
+  .withTextStyle({
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+    shadowRadius: 1,
+    shadowOffset: { width: 0, height: 0.5 },
+    shadowOpacity: 0.4,
+    shadowColor: 'black',
+    elevation: 4
+  })
+  .withFab(true)
+  .withText('X')
+  .build();
