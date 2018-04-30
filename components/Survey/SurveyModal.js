@@ -15,8 +15,10 @@ export default class SurveyModal extends React.Component {
       <Modal
         animationIn='slideInRight'
         animationOut='slideOutLeft'
-        animationInTiming={ 500 }
+        animationInTiming={ 1500 }
         animationOutTiming={ 500 }
+        backdropTransitionInTiming={ 1800 }
+        backdropTransitionOutTiming={ 900 }
         transparent={ true }
         hideModalContentWhileAnimating={ true }
         isVisible={ this.props.isVisible }

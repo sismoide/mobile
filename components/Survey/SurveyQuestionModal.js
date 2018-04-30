@@ -16,17 +16,22 @@ export default class SurveyQuestionModal extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = { visible: props.isVisible }
   }
 
   render() {
     return (
       <SurveyModal 
-        isVisible={ this.props.isVisible }
+        isVisible={ this.state.visible }
         onDismissSurvey={ this.props.onDismissSurvey }>
         <ModalHeader text={ this.props.question.question }/>
         <ModalButtonChoices 
           questionId={ this.props.question.id }
-          onResponse={ this.props.onResponse }/>
+          onResponse={ () => { 
+            this.setState({ visible: false }); 
+            // Wait 1.5 seconds to allow the exit animation to take place.
+            setTimeout(this.props.onResponse, 1500);
+          }}/>
       </SurveyModal>
     );
   }

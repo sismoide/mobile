@@ -29,12 +29,21 @@ export default class Survey extends React.Component {
     super(props);
     this.questions = questions;
     this.state = {
+      shouldShowModal: false,
       activeQuestionIndex: 0,
       binarySearchLo: 0,
       binarySearchHi: this.questions.length - 1,
       binarySearchMid: Math.floor((this.questions.length - 1) / 2),
       surveyResults: null // No results, since the survey hasn't been completed.
     }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      // Wait 1 second for the main view to load
+      // to allow smoother modal transitions.
+      this.setState({ shouldShowModal: true })
+    }, 1000);
   }
 
   /**
@@ -107,14 +116,18 @@ export default class Survey extends React.Component {
           onDismissSurvey={ this.onDismissSurvey } />
       );
     }
-    return this.questions.map((question, index) => (
-      <SurveyQuestionModal
-        key={ index }
-        question={ question }
-        onResponse={ this.onResponse }
-        onDismissSurvey= { this.onDismissSurvey }
-        isVisible={ this.modalShouldBeVisible(index) } />
-    ))
+    for (let questionIndex = 0; questionIndex < this.questions.length; ++questionIndex) {
+      if (this.modalShouldBeVisible(questionIndex)){ 
+        return(
+          <SurveyQuestionModal
+            key={ questionIndex }
+            question={ this.questions[questionIndex] }
+            onResponse={ this.onResponse }
+            onDismissSurvey= { this.onDismissSurvey }
+            isVisible={ true } />
+        );
+      }
+    }
   }
 
   render() {
@@ -123,7 +136,7 @@ export default class Survey extends React.Component {
       <View>
         <Image source={require('../../assets/map.png')} style={ { height: height, width: width } }/>
         {
-          this.showModal()
+          this.state.shouldShowModal && this.showModal()
         }	
       </View>
     );
