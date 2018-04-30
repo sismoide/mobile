@@ -1,10 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { AsyncStorage, StyleSheet } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 import Home from './components/Home';
 import Survey from './components/Survey';
-
 
 export default StackNavigator(
   {

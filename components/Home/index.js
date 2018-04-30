@@ -19,6 +19,7 @@ export default class Home extends React.Component {
     }
     this.getLatestQuakeSubmissionDate()
       .then((date) => {
+        console.log(date);
         this.setState({ lastQuakeSubmission: date });
       });
   }
@@ -28,12 +29,14 @@ export default class Home extends React.Component {
    * the last time a quake was submitted.
    */
   getLatestQuakeSubmissionDate = async () => {
-    try {
-      return moment(Number(await Storage.getLatestQuakeSubmissionTimestamp()))
+    const latestTimestamp = await Storage.getLatestQuakeSubmissionTimestamp();
+    if (latestTimestamp) {
+      return moment(latestTimestamp)
         .tz(Config.LOCALE)
-        .calendar();
-    } catch (error) {
-      return "nunca";
+        .calendar()
+        .toLocaleString();
+    } else {
+      return "nunca"
     }
   }
 

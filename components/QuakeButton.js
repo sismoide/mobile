@@ -1,33 +1,43 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
+
 import Synchronizer from "./Synchronizer.js"
 import Storage from "../database/storage.js"
 import Config from '../config/index.js';
 
-// Button Element
 export default class QuakeButton extends Component {
-  _onPressButtonQuake = async ()  => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          Storage.submitQuakeReport({
-            latitude: `${ pos.coords.latitude }`,
-            longitude: `${ pos.coords.longitude }`
-          }).then(() => { Synchronizer.onDataChange() })
-        }
-      );
-    } else {
-      Alert.alert("Geolocalización desactivada. Función no Disponible");
+  constructor(props) {
+    super(props);
+    this.state = {
+      fetchingPosition: false
     }
-    // advancing to survey
-    this.props.navigation.navigate('Survey');
+  }
+
+  _onPress = ()  => {
+    if (!navigator.geolocation) {
+      Alert.alert("Geolocalización desactivada. Función no disponible");
+      return;
+    }
+    this.setState({ fetchingPosition: true });
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        await Storage.submitQuakeReport({
+          latitude: `${ pos.coords.latitude }`,
+          longitude: `${ pos.coords.longitude }`
+        });
+        Synchronizer.onDataChange();
+        this.setState({ fetchingPosition: false });
+        this.props.navigation.navigate('Survey');
+      }
+    );
   }
   
   render() {
     return (
       <Button
-        onPress={ this._onPressButtonQuake }
-        title="Temblor?"
+        enabled={ !this.state.fetchingPosition }
+        onPress={ this._onPress }
+        title={ this.state.fetchingPosition ? "Cargando..." : "Temblor?" }
         color="#ff0000"
       />
     );
