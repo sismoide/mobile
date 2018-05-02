@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavigationActions } from 'react-navigation';
 import { Dimensions, Modal, Text, View, Image, NetInfo, AsyncStorage } from 'react-native';
 import SurveyQuestionModal from './SurveyQuestionModal.js';
 import SurveyCompleteModal from './SurveyCompleteModal.js';
@@ -28,13 +29,21 @@ export default class Survey extends React.Component {
     super(props);
     this.questions = questions;
     this.state = {
+      shouldShowModal: false,
       activeQuestionIndex: 0,
       binarySearchLo: 0,
       binarySearchHi: this.questions.length - 1,
       binarySearchMid: Math.floor((this.questions.length - 1) / 2),
-      surveyIsOngoing: true, // Survey starts immediately.
       surveyResults: null // No results, since the survey hasn't been completed.
     }
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      // Wait 1 second for the main view to load
+      // to allow smoother modal transitions.
+      this.setState({ shouldShowModal: true })
+    }, 1000);
   }
 
   /**
@@ -71,21 +80,24 @@ export default class Survey extends React.Component {
    * @param { Object } - surveyResults: the survey results.
    */
   onSurveyCompleted = (surveyResults) => {
-	Storage.submitLatestQuakeIntensity(surveyResults.intensity).then(() => { Synchronizer.onDataChange() })
+    Storage.submitLatestQuakeIntensity(surveyResults.intensity).then(() => { Synchronizer.onDataChange() })
   }
 
   onDismissSurvey = () => {
-    this.setState({
-      surveyIsOngoing: false
-    });
-    this.props.navigation.navigate('Home');
+    /*
+    * Go home and wipe navigation stack, because user
+    * shouldn't be able to come back here.
+    */
+    this.props.navigation.dispatch(NavigationActions.reset({
+      index: 0,
+      actions: [ NavigationActions.navigate({ routeName: 'Home' }) ]
+    }));
   }
 
   modalShouldBeVisible = (questionIndex) => {
     // Don't show anything if the survey was canceled/completed.
     // Dont't show the modal if it's not its turn.
-    return this.state.surveyIsOngoing 
-        && this.state.binarySearchMid === questionIndex;
+    return this.state.binarySearchMid === questionIndex;
   }
   
   /**
@@ -100,18 +112,22 @@ export default class Survey extends React.Component {
       return( 
         <SurveyCompleteModal 
           intensity={ this.state.surveyResults.intensity }
-          visible={ this.state.surveyIsOngoing }
+          isVisible={ true }
           onDismissSurvey={ this.onDismissSurvey } />
       );
     }
-    return this.questions.map((question, index) => (
-      <SurveyQuestionModal
-        key={ index }
-        question={ question }
-        onResponse={ this.onResponse }
-        onDismissSurvey= { this.onDismissSurvey }
-        visible={ this.modalShouldBeVisible(index) } />
-    ))
+    for (let questionIndex = 0; questionIndex < this.questions.length; ++questionIndex) {
+      if (this.modalShouldBeVisible(questionIndex)){ 
+        return(
+          <SurveyQuestionModal
+            key={ questionIndex }
+            question={ this.questions[questionIndex] }
+            onResponse={ this.onResponse }
+            onDismissSurvey= { this.onDismissSurvey }
+            isVisible={ true } />
+        );
+      }
+    }
   }
 
   render() {
@@ -120,7 +136,7 @@ export default class Survey extends React.Component {
       <View>
         <Image source={require('../../assets/map.png')} style={ { height: height, width: width } }/>
         {
-          this.showModal()
+          this.state.shouldShowModal && this.showModal()
         }	
       </View>
     );

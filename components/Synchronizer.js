@@ -92,7 +92,7 @@ export default (function() {
     }
   }
 
-  return{
+  return {
     connectionHandler: function(connectionInfo) {
       setConnectionType(connectionInfo.type);
       getAsyncStorageData()
@@ -104,7 +104,8 @@ export default (function() {
     
     onDataChange: function() {
       checkConnectionAndSend()
-	  .then(() => {});
+        .then(() => {})
+        .catch((err) => {});
     },
   }
 })()

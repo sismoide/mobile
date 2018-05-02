@@ -24,3 +24,7 @@ yarn-error.log*
 
 # watchman
 fs.*
+
+android/app/build
+android/.gradle/
+android/.idea/

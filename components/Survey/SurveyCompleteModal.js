@@ -21,7 +21,7 @@ export default class SurveyCompleteModal extends React.Component {
   render() {
     return (
       <SurveyModal 
-        visible={ this.props.visible }
+        isVisible={ this.props.isVisible }
         onDismissSurvey={ this.props.onDismissSurvey} >
         <ModalHeader text={ 'Terminaste la encuesta, campeón. Te felicito!'
           + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${this.props.intensity}.` }/>
