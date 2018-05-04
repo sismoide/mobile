@@ -40,6 +40,8 @@ export default class Home extends React.Component {
     }
   }
 
+  componentDidMount = () => NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler);
+
   render() {
     return (
       <View style={styles.container}>
