@@ -16,7 +16,6 @@ export default {
   },
   
   patchSurvey: async function(body, id) {
-//  patchSurvey: function(body) {
     const survey = {
       method: 'PATCH',
       headers: {

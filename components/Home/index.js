@@ -1,55 +1,30 @@
 import React from 'react';
-import moment from 'moment-timezone';
 import { NetInfo, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 
 import Survey from '../Survey';
 import Synchronizer from '../../synchronizer';
 import QuakeButton from '../QuakeButton.js';
-import Storage from '../../database/storage.js';
-import Config from '../../config';
+import fetchLastQuakeSubmissionDate from '../../actions/home/fetch_last_quake_submission_date.js';
 import navigationOptions from '../../styles/navigation_options.js';
 
-export default class Home extends React.Component {
+class Home extends React.Component {
   static navigationOptions = navigationOptions;
 
-  constructor(props) {
-    super(props);
-    /* Start fetching the latest quake submission. Show `...` in the meantime */
-    this.state = {
-      lastQuakeSubmission: "..."
-    }
-    this.getLatestQuakeSubmissionDate()
-      .then((date) => {
-        console.log(date);
-        this.setState({ lastQuakeSubmission: date });
-      });
+  componentDidMount = () => { 
+    NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler)
+    this.props.fetchLastQuakeSubmissionDate();
   }
-
-  /**
-   * @returns { String } A formatted, locale aware date string of 
-   * the last time a quake was submitted.
-   */
-  getLatestQuakeSubmissionDate = async () => {
-    const latestTimestamp = await Storage.getLatestQuakeSubmissionTimestamp();
-    if (latestTimestamp) {
-      return moment(latestTimestamp)
-        .tz(Config.LOCALE)
-        .calendar()
-        .toLocaleString();
-    } else {
-      return "nunca"
-    }
-  }
-
-  componentDidMount = () => NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler);
 
   render() {
-    return (
+    const { lastQuakeSubmissionDate } = this.props;
+    return(
       <View style={styles.container}>
         {/* pass navigation so that QuakeButton can handle navigation
             itself */}
         <QuakeButton navigation={ this.props.navigation }/>
-        <Text style={ { padding: 40 } }>La última vez que reportaste un sismo fue: { this.state.lastQuakeSubmission }</Text>
+        <Text style={ { padding: 40 } }>La última vez que reportaste un sismo fue: 
+          { lastQuakeSubmissionDate }</Text>
       </View>
     );
   }
@@ -63,3 +38,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
 });
+
+const mapStateToProps = (state) => ({
+  lastQuakeSubmissionDate: state.home.lastQuakeSubmissionDate
+})
+
+const mapActionsToProps = {
+  fetchLastQuakeSubmissionDate
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(Home);
+
