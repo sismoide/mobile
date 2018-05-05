@@ -6,7 +6,7 @@ import SurveyCompleteModal from './SurveyCompleteModal.js';
 import questions from './questions.js';
 import navigationOptions from '../../styles/navigation_options.js';
 import Config from '../../config/index.js';
-import Synchronizer from '../Synchronizer.js';
+import Synchronizer from '../../synchronizer';
 import Storage from "../../database/storage.js";
 
 /**

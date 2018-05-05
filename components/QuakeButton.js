@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
 
-import Synchronizer from "./Synchronizer.js"
-import Storage from "../database/storage.js"
+import Synchronizer from '../synchronizer';
+import Storage from '../database/storage.js';
 import Config from '../config/index.js';
 
 export default class QuakeButton extends Component {

@@ -1,8 +1,9 @@
 import React from 'react';
 import moment from 'moment-timezone';
-import { StyleSheet, Text, View } from 'react-native';
+import { NetInfo, StyleSheet, Text, View } from 'react-native';
 
 import Survey from '../Survey';
+import Synchronizer from '../../synchronizer';
 import QuakeButton from '../QuakeButton.js';
 import Storage from '../../database/storage.js';
 import Config from '../../config';
