@@ -16,12 +16,13 @@ class SurveyQuestionModal extends React.Component {
   render() {
     const { 
       question,
+      onRequestClose,
       shouldBeVisible, 
       couldBeVisible } = this.props;
     return (
       <SurveyModal
-        isVisible={ shouldBeVisible && couldBeVisible }
-        onRequestClose={ () => { } } >
+        onRequestClose={ onRequestClose }
+        isVisible={ shouldBeVisible && couldBeVisible } >
         <ModalHeader text={ question.question }/>
         <ConnectedModalButtonChoices />
       </SurveyModal>

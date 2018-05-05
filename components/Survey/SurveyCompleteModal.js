@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, TouchableHighlight,  View } from 'react-native';
 import { connect } from 'react-redux';
 
+import onDismissSurvey from '../../actions/survey/on_dismiss_survey.js';
 import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
 import SurveyModal from './SurveyModal.js';
@@ -12,9 +13,13 @@ import ClickableWithIcon from './ClickableWithIcon.js';
  */
 class SurveyCompleteModal extends React.Component {
   render() {
-    const { couldBeVisible, surveyResults } = this.props;
+    const { 
+      onRequestClose,
+      couldBeVisible, 
+      surveyResults } = this.props;
     return (
       <SurveyModal 
+        onRequestClose={ onRequestClose }
         isVisible={ couldBeVisible }>
         <ModalHeader text={ 'Terminaste la encuesta, campeón. Te felicito!'
           + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${ surveyResults.intensity }.` }/>

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { MKButton, MKColor, getTheme } from 'react-native-material-kit';
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 
+import onDismissSurvey from '../../actions/survey/on_dismiss_survey.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
 import BaseStyle from './../../styles/base.js';
