@@ -13,16 +13,13 @@ export default class SurveyModal extends React.Component {
   render() {
     return (
       <Modal
-        animationIn='slideInRight'
-        animationOut='slideOutLeft'
-        animationInTiming={ 1500 }
-        animationOutTiming={ 500 }
-        backdropTransitionInTiming={ 1800 }
-        backdropTransitionOutTiming={ 900 }
+        useNativeDriver={ true }
+        animationOut='bounceOut'
+        animationIn='fadeInRight'
         transparent={ true }
-        hideModalContentWhileAnimating={ true }
         isVisible={ this.props.isVisible }
-        onRequestClose={() => {}}>
+        hideModalConentWhileAnimating={ true }
+        onRequestClose={ this.props.onRequestClose } >
         <View style={{ flexDirection: 'column', flex: 1}}>
           <View style={{ flex: 0.5 }}/>
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
@@ -36,7 +33,7 @@ export default class SurveyModal extends React.Component {
               justifyContent: 'center', 
               alignItems: 'center'
             } }>
-            <ExitSurveyButton onPress={ () => this.props.onDismissSurvey() }/>
+            <ExitSurveyButton onPress={ this.props.onRequestClose }/>
 					</View>
         </View>
       </Modal>

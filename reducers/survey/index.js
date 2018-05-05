@@ -1,17 +1,25 @@
-import { QUESTION_ANSWERED, SURVEY_COMPLETED } from '../../actions/types.js';
+import { 
+  QUESTION_ANSWERED, 
+  SURVEY_COMPLETED ,
+  MODALS_START_TRANSITIONING,
+  MODALS_STOP_TRANSITIONING
+} from '../../actions/types.js';
 import questions from './questions.js';
 
-const initialState = {
-  questions,
-  shouldShowModal: false,
-  binarySearchLo: 0,
-  binarySearchHi: questions.length - 1,
-  binarySearchMid: Math.floor((questions.length - 1) / 2),
-  surveyResults: null
+const initialState = () => {
+  const binarySearchMid = Math.floor((questions.length - 1) / 2);
+  const currentQuestion = questions[binarySearchMid];
+  return {
+    currentQuestion,
+    surveyResults: null,
+    binarySearchLo: 0,
+    binarySearchHi: questions.length - 1,
+    binarySearchMid,
+    modalsTransitioning: false
+  }
 }
 
-
-export default (state = initialState, action) => {
+export default (state = initialState(), action) => {
   switch(action.type) {
     case QUESTION_ANSWERED: {
       let lo = state.binarySearchLo;
@@ -30,7 +38,22 @@ export default (state = initialState, action) => {
         ...state,
         binarySearchLo: lo,
         binarySearchHi: hi,
-        binarySearchMid: mid
+        binarySearchMid: mid,
+        currentQuestion: Object.assign({}, questions[mid])
+      }
+    }
+
+    case MODALS_START_TRANSITIONING: {
+      return {
+        ...state,
+        modalsTransitioning: true
+      }
+    }
+
+    case MODALS_STOP_TRANSITIONING: {
+      return {
+        ...state,
+        modalsTransitioning: false
       }
     }
 

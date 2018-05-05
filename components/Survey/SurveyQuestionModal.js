@@ -1,37 +1,33 @@
 import React from 'react';
 import { View } from 'react-native';
+import { connect } from 'react-redux';
+
 import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
 import SurveyModal from './SurveyModal.js';
 import ClickableWithIcon from './ClickableWithIcon.js';
 
+import onQuestionAnswered from '../../actions/survey/on_question_answered.js';
+
 /**
  * Represents a modal with a question with which the user can interact (say yes/no).
  */
-export default class SurveyQuestionModal extends React.Component {
-  static RESPONSES = {
-    NO: 0,
-    YES: 1
-  };
-
+class SurveyQuestionModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { visible: props.isVisible }
+    this.state = {
+      isVisible: true
+    }
   }
 
   render() {
+    const { shouldBeVisible, question } = this.props;
     return (
-      <SurveyModal 
-        isVisible={ this.state.visible }
-        onDismissSurvey={ this.props.onDismissSurvey }>
-        <ModalHeader text={ this.props.question.question }/>
-        <ModalButtonChoices 
-          questionId={ this.props.question.id }
-          onResponse={ () => { 
-            this.setState({ visible: false }); 
-            // Wait 1.5 seconds to allow the exit animation to take place.
-            setTimeout(this.props.onResponse, 1500);
-          }}/>
+      <SurveyModal
+        isVisible={ this.state.isVisible && shouldBeVisible }
+        onRequestClose={ () => { this.setState({ isVisible: false }) } } >
+        <ModalHeader text={ question.question }/>
+        <ConnectedModalButtonChoices />
       </SurveyModal>
     );
   }
@@ -39,25 +35,27 @@ export default class SurveyQuestionModal extends React.Component {
 
 class ModalButtonChoices extends React.Component {
   render() {
+    const { onQuestionAnswered } = this.props;
     return(
       <View style={ styles.buttonContainer }>
         <ClickableWithIcon
           icon='thumbs-down' 
           text='NO' 
-          onPress={ () => { 
-            this.props.onResponse(
-              this.props.questionId,
-              SurveyQuestionModal.RESPONSES.NO);
-          } }/>
+          onPress={ () => onQuestionAnswered('NO') }/>
         <ClickableWithIcon
           icon='thumbs-up' 
           text='SÍ'
-          onPress={ () => { 
-            this.props.onResponse(
-              this.props.questionId,
-              SurveyQuestionModal.RESPONSES.YES);
-          } }/>
+          onPress={ () => onQuestionAnswered('YES') }/>
       </View>
     );
   }
 }
+
+const ConnectedModalButtonChoices = connect(null, { onQuestionAnswered })(ModalButtonChoices);
+
+const mapStateToProps = (state) => ({
+  question: state.survey.currentQuestion,
+  shouldBeVisible: !state.survey.modalsTransitioning
+});
+
+export default connect(mapStateToProps)(SurveyQuestionModal);
