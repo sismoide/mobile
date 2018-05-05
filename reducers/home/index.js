@@ -1,7 +1,7 @@
 import { 
   GET_LAST_QUAKE_SUBMISSION_DATE_REQUEST,
   LAST_QUAKE_SUBMISSION_DATE_RECEIVED
-} from '../actions/types.js'
+} from '../../actions/types.js'
 
 const initialState = {
   lastQuakeSubmissionDate: "...",
