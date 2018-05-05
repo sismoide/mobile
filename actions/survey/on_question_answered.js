@@ -9,6 +9,10 @@ export default (response) => {
     dispatch(modalsStartTransitioning());
     setTimeout(() => {
       dispatch(questionAnswered(response));
+      const state = getState().survey;
+      if (state.binarySearchLo >= state.binarySearchHi) {
+        dispatch(surveyCompleted({ intensity: state.currentQuestion.intensity }));;
+      }
       dispatch(modalsStopTransitioning())
     }, 100);
   }

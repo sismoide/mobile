@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, TouchableHighlight,  View } from 'react-native';
+import { connect } from 'react-redux';
+
 import styles from './styles.js';
 import ModalHeader from './ModalHeader.js';
 import SurveyModal from './SurveyModal.js';
@@ -8,24 +10,15 @@ import ClickableWithIcon from './ClickableWithIcon.js';
 /**
  * Represents the modal the user sees when he's done with the survey
  */
-export default class SurveyCompleteModal extends React.Component {
-  static RESPONSES = {
-    NO: 0,
-    YES: 1
-  };
-
-  constructor(props) {
-    super(props);
-  }
-
+class SurveyCompleteModal extends React.Component {
   render() {
+    const { couldBeVisible, surveyResults } = this.props;
     return (
       <SurveyModal 
-        isVisible={ this.props.isVisible }
-        onDismissSurvey={ this.props.onDismissSurvey} >
+        isVisible={ couldBeVisible }>
         <ModalHeader text={ 'Terminaste la encuesta, campeón. Te felicito!'
-          + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${this.props.intensity}.` }/>
-        <ThankYouButton onPress={ () => { this.props.onDismissSurvey() } }/>
+          + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${ surveyResults.intensity }.` }/>
+        <ThankYouButton onPress={ () => { } }/>
       </SurveyModal>
     );
   }
@@ -39,8 +32,15 @@ class ThankYouButton extends React.Component {
         <ClickableWithIcon 
           icon='thumbs-up' 
           text='De nada!'
-          onPress={ this.props.onPress } />
+          onPress={ () => {} } />
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  surveyResults: state.survey.surveyResults,
+  couldBeVisible: !state.survey.modalsTransitioning
+});
+
+export default connect(mapStateToProps)(SurveyCompleteModal);

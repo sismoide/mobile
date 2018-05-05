@@ -13,19 +13,15 @@ import onQuestionAnswered from '../../actions/survey/on_question_answered.js';
  * Represents a modal with a question with which the user can interact (say yes/no).
  */
 class SurveyQuestionModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isVisible: true
-    }
-  }
-
   render() {
-    const { shouldBeVisible, question } = this.props;
+    const { 
+      question,
+      shouldBeVisible, 
+      couldBeVisible } = this.props;
     return (
       <SurveyModal
-        isVisible={ this.state.isVisible && shouldBeVisible }
-        onRequestClose={ () => { this.setState({ isVisible: false }) } } >
+        isVisible={ shouldBeVisible && couldBeVisible }
+        onRequestClose={ () => { } } >
         <ModalHeader text={ question.question }/>
         <ConnectedModalButtonChoices />
       </SurveyModal>
@@ -55,7 +51,8 @@ const ConnectedModalButtonChoices = connect(null, { onQuestionAnswered })(ModalB
 
 const mapStateToProps = (state) => ({
   question: state.survey.currentQuestion,
-  shouldBeVisible: !state.survey.modalsTransitioning
+  shouldBeVisible: state.survey.surveyResults ? false : true,
+  couldBeVisible: !state.survey.modalsTransitioning
 });
 
 export default connect(mapStateToProps)(SurveyQuestionModal);

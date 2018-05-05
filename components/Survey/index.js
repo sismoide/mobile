@@ -4,6 +4,7 @@ import { Dimensions, View, Image } from 'react-native';
 
 import navigationOptions from '../../styles/navigation_options.js';
 import SurveyQuestionModal from './SurveyQuestionModal.js';
+import SurveyCompleteModal from './SurveyCompleteModal.js';
 
 
 /**
@@ -19,26 +20,23 @@ function withoutBackButton(navigationOptions) {
 class Survey extends Component {
   static navigationOptions = withoutBackButton(navigationOptions);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      waiting: true
-    }
-  }
-
-  componentDidMount() {
-    setTimeout(() => this.setState({ waiting: false }), 1000);
-  }
-
   render() {
     const { height, width } = Dimensions.get('window');
     return( 
       <View>
         <Image source={require('../../assets/map.png')} style={ { height: height, width: width } }/>
-        <SurveyQuestionModal />
+        { 
+          this.props.surveyWasCompleted 
+          ? <SurveyCompleteModal />
+          : <SurveyQuestionModal />
+        }
       </View>
     );
   }
 }
 
-export default connect(null, null)(Survey);
+const mapStateToProps = (state) => ({
+  surveyWasCompleted: state.survey.surveyResults ? true : false
+});
+
+export default connect(mapStateToProps)(Survey);
