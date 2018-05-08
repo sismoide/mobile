@@ -1,8 +1,10 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { MKButton, MKColor, getTheme } from 'react-native-material-kit';
+import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 
+import onDismissSurvey from '../../actions/survey/on_dismiss_survey.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles.js';
 import BaseStyle from './../../styles/base.js';
@@ -13,16 +15,13 @@ export default class SurveyModal extends React.Component {
   render() {
     return (
       <Modal
-        animationIn='slideInRight'
-        animationOut='slideOutLeft'
-        animationInTiming={ 1500 }
-        animationOutTiming={ 500 }
-        backdropTransitionInTiming={ 1800 }
-        backdropTransitionOutTiming={ 900 }
+        useNativeDriver={ true }
+        animationOut='bounceOut'
+        animationIn='fadeInRight'
         transparent={ true }
-        hideModalContentWhileAnimating={ true }
         isVisible={ this.props.isVisible }
-        onRequestClose={() => {}}>
+        hideModalConentWhileAnimating={ true }
+        onRequestClose={ this.props.onRequestClose } >
         <View style={{ flexDirection: 'column', flex: 1}}>
           <View style={{ flex: 0.5 }}/>
           <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
@@ -36,7 +35,7 @@ export default class SurveyModal extends React.Component {
               justifyContent: 'center', 
               alignItems: 'center'
             } }>
-            <ExitSurveyButton onPress={ () => this.props.onDismissSurvey() }/>
+            <ExitSurveyButton onPress={ this.props.onRequestClose }/>
 					</View>
         </View>
       </Modal>
