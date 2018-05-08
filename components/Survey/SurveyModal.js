@@ -24,17 +24,15 @@ export default class SurveyModal extends React.Component {
         onRequestClose={ this.props.onRequestClose } >
         <View style={{ flexDirection: 'column', flex: 1}}>
           <View style={{ flex: 0.5 }}/>
-          <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-            <View style={ Object.assign({}, theme.cardStyle, { flex: 1 }) }>
-              { this.props.children } 
-            </View>
+          <View style={ Object.assign({}, theme.cardStyle, { flex: 1 }) }>
+            { this.props.children } 
           </View>
           <View 
-            style={ { 
+            style={{ 
               flex: 0.5, 
               justifyContent: 'center', 
               alignItems: 'center'
-            } }>
+            }}>
             <ExitSurveyButton onPress={ this.props.onRequestClose }/>
 					</View>
         </View>
