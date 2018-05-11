@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Alert, AppRegistry, Button, StyleSheet, View, Text } from 'react-native';
+import { Alert, TouchableHighlight, Image } from 'react-native';
 
 import Synchronizer from '../synchronizer';
 import Storage from '../database/storage.js';
 import Config from '../config/index.js';
 
+const PENDING_SURVEY = '@PendingSurvey';
+
 export default class QuakeButton extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fetchingPosition: false
+      fetchingPosition: false,
     }
   }
 
@@ -34,12 +36,16 @@ export default class QuakeButton extends Component {
   
   render() {
     return (
-      <Button
-        enabled={ !this.state.fetchingPosition }
-        onPress={ this._onPress }
-        title={ this.state.fetchingPosition ? "Cargando..." : "Temblor?" }
-        color="#ff0000"
-      />
+      <TouchableHighlight
+        disabled={this.state.fetchingPosition}
+        onPress={this._onPress}
+		underlayColor={'transparent'}
+      >
+        <Image
+          source={require('../assets/red_button.png')}
+          style={{width:300, height:300}}
+        />
+      </TouchableHighlight>
     );
   }
 }
