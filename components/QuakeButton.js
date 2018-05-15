@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Alert, TouchableHighlight, Image } from 'react-native';
+import { connect } from 'react-redux';
 
 import Synchronizer from '../synchronizer';
 import Storage from '../database/storage.js';
 import Config from '../config/index.js';
 
-const PENDING_SURVEY = '@PendingSurvey';
+import onQuakeReport from '../actions/buttons/on_quake_report.js';
 
-export default class QuakeButton extends Component {
-  constructor(props) {
+class QuakeButton extends Component {
+/*  constructor(props) {
     super(props);
     this.state = {
       fetchingPosition: false,
@@ -32,13 +33,18 @@ export default class QuakeButton extends Component {
         this.props.navigation.navigate('Survey');
       }
     );
-  }
-  
+  }*/
+
   render() {
+    const {
+      fetchingPosition,
+      onQuakeReport,
+      navigation } = this.props;
+    const reportQuake = () => onQuakeReport(navigation);
     return (
       <TouchableHighlight
-        disabled={this.state.fetchingPosition}
-        onPress={this._onPress}
+        disabled={fetchingPosition}
+        onPress={reportQuake}
 		underlayColor={'transparent'}
       >
         <Image
@@ -49,3 +55,13 @@ export default class QuakeButton extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  fetchingPosition: state.survey.fetchingPosition,
+});
+
+const mapActionsToProps = {
+  onQuakeReport
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(QuakeButton);
