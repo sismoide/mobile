@@ -11,7 +11,7 @@ export default class ClickableWithIcon extends React.Component {
       <MKButton 
         style={{ 
           flex: 1, 
-          justifyContent: 'center', 
+          justifyContent: 'space-evenly', 
           alignItems: 'center'
         }}
         rippleLocation='center'
