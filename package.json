@@ -17,6 +17,7 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "metro": "^0.37.0",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.16",
     "react": "16.2.0",

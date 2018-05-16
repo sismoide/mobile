@@ -3,6 +3,11 @@
 # expo
 .expo/
 
+xcuserdata
+project.xcworkspace
+
+.DS_Store
+
 # json-server
 db.json
 
@@ -29,3 +34,5 @@ android/app/build
 android/.gradle/
 android/.idea/
 android/local.properties
+
+build/
