@@ -93,19 +93,22 @@ export default (function() {
   }
 
   return {
-    connectionHandler: function(connectionInfo) {
+    connectionHandler: async function(connectionInfo) {
       setConnectionType(connectionInfo.type);
-      getAsyncStorageData()
-      .then(() => {
-        return checkConnectionAndSend();
-      })
-      .then(() => {});
+      try {
+        await getAsyncStorageData();
+        await checkConnectionAndSend();
+      } catch (error) {
+        // TODO:
+      }
     },
     
-    onDataChange: function() {
-      checkConnectionAndSend()
-        .then(() => {})
-        .catch((err) => {});
+    onDataChange: async function() {
+      try {
+        await checkConnectionAndSend();
+      } catch (error) {
+        // TODO:
+      }
     },
   }
 })()
