@@ -7,6 +7,7 @@ import configureStore from './store';
 
 import Home from './components/Home';
 import Survey from './components/Survey';
+import Map from './components/Map';
 
 const RootNavigator = StackNavigator(
   {
@@ -16,9 +17,12 @@ const RootNavigator = StackNavigator(
     Survey: {
       screen: Survey
     },
+    Map: {
+      screen: Map
+    }
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'Map'
   }
 );
 
