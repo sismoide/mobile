@@ -7,9 +7,11 @@ import FullScreenSpinner from '../Generic/full_screen_spinner.js';
 import baseNavigationOptions from '../../styles/navigation_options.js';
 import getUserPosition from '../../actions/geolocation/get_user_position.js';
 
+/**
+ * This component contains a map that displays relevant information
+ * with respect to earthquakes in the vicinity of the user's location
+ */
 class Map extends React.Component {
-  static navigationOptions = baseNavigationOptions;
-
   componentDidMount() {
     this.props.getUserPosition();
   }
@@ -21,6 +23,8 @@ class Map extends React.Component {
       fetchingUserPosition
     } = this.props;
     if (fetchingUserPosition || !userPosition) {
+      // TODO: Should display an error if it's the case that !fetchingUserPositon && !userPosition
+      // because it means that the user's location could not be determined.
       return (<FullScreenSpinner />);
     } 
     return(
