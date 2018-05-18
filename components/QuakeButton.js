@@ -19,7 +19,7 @@ class QuakeButton extends Component {
       <TouchableHighlight
         disabled={fetchingPosition}
         onPress={reportQuake}
-		underlayColor={'transparent'}
+        underlayColor={'transparent'}
       >
         <Image
           source={require('../assets/red_button.png')}

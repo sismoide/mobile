@@ -23,7 +23,7 @@ export default (navigation) => {
           });
           Synchronizer.onDataChange();
         } catch (error) {}
-//        navigation.dispatch( NavigationActions.navigate({ routeName: 'Survey' }) );
+        navigation.dispatch( NavigationActions.navigate({ routeName: 'Survey' }) );
         dispatch(enableQuakeButton());
       }
     );

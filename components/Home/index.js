@@ -30,7 +30,7 @@ class Home extends React.Component {
         <Text style={ { padding: 15, fontWeight: 'bold', fontSize: 18 } }>Sentiste un sismo? Aprieta el botón!</Text>
         <QuakeButton navigation={ this.props.navigation }/>
         <Text style={ { padding: 15 } }>La última vez que reportaste un sismo fue: { lastQuakeSubmissionDate }</Text>
-		<SurveyButton navigation={ this.props.navigation }/>
+        <SurveyButton navigation={ this.props.navigation }/>
       </View>
     );
   }

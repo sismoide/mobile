@@ -22,7 +22,7 @@ export default (function() {
     quakePos = await Storage.getStorageItem(LAST_QUAKE_POS_KEY);
     surveyPos = await Storage.getStorageItem(LAST_SURVEY_POS_KEY);
     ids = await Storage.getStorageItem(QUAKE_ID_TO_SERVER_ID);
-	userToken = await Storage.getStorageItem(USER_TOKEN);
+    userToken = await Storage.getStorageItem(USER_TOKEN);
 
     lastQuakeSentPos = quakePos ? parseInt(quakePos) : -1;
     lastSurveySentPos = surveyPos ? parseInt(surveyPos) : -1;
@@ -59,7 +59,7 @@ export default (function() {
   async function sendSurveys() {
     surveyList = await Storage.getIntensities();
     if (!surveyList || surveyList == []) {
-	  return;
+      return;
     } 
     for (let i = 1+lastSurveySentPos; i<surveyList.length; i++) {
       try {
@@ -83,15 +83,16 @@ export default (function() {
     await Storage.removeStorageItem(LAST_QUAKE_POS_KEY);
     await Storage.removeStorageItem(LAST_SURVEY_POS_KEY);
     await Storage.removeStorageItem(QUAKE_ID_TO_SERVER_ID);
+	await Storage.removeStorageItem(USER_TOKEN);
   }
 
   async function checkConnectionAndSend() {
     if (connectionType != 'none') {
-	  if (!userToken) {
+      if (!userToken) {
         nonce = await ServerAPI.nonceRequest();
         userToken = await ServerAPI.challengeRequest(nonce.key, nonce.shaObj);
-		Storage.setStorageItem(USER_TOKEN, userToken);
-	  }
+        Storage.setStorageItem(USER_TOKEN, userToken);
+      }
       await sendQuakes();
       await sendSurveys();
     } else {
@@ -102,7 +103,6 @@ export default (function() {
   return {
     connectionHandler: function(connectionInfo) {
       setConnectionType(connectionInfo.type);
-	  resetStorageVariables();
       getStorageData()
       .then(() => {
         return checkConnectionAndSend();
