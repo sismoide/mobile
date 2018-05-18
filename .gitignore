@@ -1,5 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+*.iml
+
 # expo
 .expo/
 
@@ -30,6 +32,7 @@ yarn-error.log*
 # watchman
 fs.*
 
+android/app/debug
 android/app/build
 android/.gradle/
 android/.idea/
