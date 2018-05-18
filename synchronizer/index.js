@@ -39,7 +39,7 @@ export default (function() {
           let quakeToSend = quakeList[i];
           qId = quakeToSend.quakeId;
           delete quakeToSend.quakeId;
-          serverId = await ServerAPI.postQuake(quakeToSend);
+          serverId = await ServerAPI.postQuake(quakeToSend, userToken);
           quakeToServerId[qId] = serverId;
           lastQuakeSentPos = i.toString();
           await Storage.setStorageItem(
@@ -67,7 +67,7 @@ export default (function() {
         quakeId = surveyToSend.quakeId;
         delete surveyToSend.quakeId;
         serverId = quakeToServerId[quakeId];
-        await ServerAPI.patchSurvey(surveyList[i], serverId);
+        await ServerAPI.patchSurvey(surveyList[i], serverId, userToken);
         lastSurveySentPos = i.toString();
         await Storage.setStorageItem(
           LAST_SURVEY_POS_KEY,
