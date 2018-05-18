@@ -7,11 +7,10 @@ export default {
     const nonce = {
       method: 'POST'
     }
-    console.log(Config.SERVER_URL_NONCE);
     let response = await fetch(Config.SERVER_URL_NONCE, nonce);
     let responseJson = await response.json();
     keySha = { 'h': sha256(responseJson.key) };
-    return challengeRequest(responseJson.key, keySha);
+    return { key: responseJson.key, shaObj: keySha };
   },
 
   challengeRequest: async function(key, shaObj) {
@@ -19,22 +18,22 @@ export default {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authotization': ''+key,
+        'Authorization': ''+key,
       },
       body: JSON.stringify(shaObj)
     }
     let response = await fetch(Config.SERVER_URL_CHALLENGE, challenge);
-	let responseJson = await response.json();
-	return responseJson.token;
+    let responseJson = await response.json();
+    return responseJson.token;
   },
 
-  postQuake: async function(body) {
+  postQuake: async function(body, userToken) {
     const quake = {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-//		'Authotization': 'Token []'
+        'Authorization': 'Token '+userToken
       },
       body: JSON.stringify(body)
     };
@@ -43,16 +42,16 @@ export default {
     return responseJson.id;
   },
   
-  patchSurvey: async function(body, id) {
+  patchSurvey: async function(body, id, userToken) {
     const survey = {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-		'Authotization': 'Token []'
+        'Authorization': 'Token '+userToken
       },
       body: JSON.stringify(body)
     };
     patchUrl = Config.SERVER_URL_REPORTS + id + '/';
-    fetch(patchUrl, survey);
+    await fetch(patchUrl, survey);
   },
 }
