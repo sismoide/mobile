@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, TouchableHighlight, Image } from 'react-native';
+import { TouchableHighlight, Image } from 'react-native';
 import { connect } from 'react-redux';
 
 import Synchronizer from '../synchronizer';

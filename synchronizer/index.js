@@ -1,4 +1,4 @@
-import { Alert, NetInfo, AsyncStorage } from 'react-native';
+import { NetInfo, AsyncStorage } from 'react-native';
 import ServerAPI from "../serverAPI/ServerAPI.js";
 import Storage from "../database/storage.js";
 
@@ -83,7 +83,7 @@ export default (function() {
     await Storage.removeStorageItem(LAST_QUAKE_POS_KEY);
     await Storage.removeStorageItem(LAST_SURVEY_POS_KEY);
     await Storage.removeStorageItem(QUAKE_ID_TO_SERVER_ID);
-	await Storage.removeStorageItem(USER_TOKEN);
+    await Storage.removeStorageItem(USER_TOKEN);
   }
 
   async function checkConnectionAndSend() {

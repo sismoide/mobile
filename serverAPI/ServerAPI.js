@@ -1,5 +1,5 @@
 import Config from '../config/index.js';
-import {Alert} from 'react-native';
+
 var sha256 = require('js-sha256');
 
 export default {
