@@ -9,32 +9,6 @@ import Config from '../config/index.js';
 import onQuakeReport from '../actions/buttons/on_quake_report.js';
 
 class QuakeButton extends Component {
-/*  constructor(props) {
-    super(props);
-    this.state = {
-      fetchingPosition: false,
-    }
-  }
-
-  _onPress = ()  => {
-    if (!navigator.geolocation) {
-      Alert.alert("Geolocalización desactivada. Función no disponible");
-      return;
-    }
-    this.setState({ fetchingPosition: true });
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        await Storage.submitQuakeReport({
-          latitude: `${ pos.coords.latitude }`,
-          longitude: `${ pos.coords.longitude }`
-        });
-        Synchronizer.onDataChange();
-        this.setState({ fetchingPosition: false });
-        this.props.navigation.navigate('Survey');
-      }
-    );
-  }*/
-
   render() {
     const {
       fetchingPosition,

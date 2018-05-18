@@ -1,5 +1,5 @@
 import React from 'react';
-import { NetInfo, StyleSheet, Text, View } from 'react-native';
+import { Alert, NetInfo, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 
 import Survey from '../Survey';
@@ -15,6 +15,8 @@ class Home extends React.Component {
   static navigationOptions = navigationOptions;
 
   componentDidMount = () => {
+    Storage.clearQuakeReports();
+    Storage.clearIntensities();
     NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler)
     this.props.fetchLastQuakeSubmissionDate();
   }

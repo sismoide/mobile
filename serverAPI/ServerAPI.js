@@ -11,7 +11,7 @@ export default {
     let response = await fetch(Config.SERVER_URL_NONCE, nonce);
     let responseJson = await response.json();
     keySha = { 'h': sha256(responseJson.key) };
-    challengeRequest(responseJson.key, keySha);
+    return challengeRequest(responseJson.key, keySha);
   },
 
   challengeRequest: async function(key, shaObj) {

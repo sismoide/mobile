@@ -8,7 +8,7 @@ import Storage from '../../database/storage.js';
 import Synchronizer from '../../synchronizer';
 
 export default (navigation) => {
-  return dispatch  => {
+  return dispatch => {
     if (!navigator.geolocation) {
       Alert.alert("Geolocalización desactivada. Función no disponible");
       return;

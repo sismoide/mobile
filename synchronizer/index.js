@@ -101,16 +101,20 @@ export default (function() {
   }
 
   return {
+    firstTime: function(connectionInfo) {
+      
+    }
+
     connectionHandler: function(connectionInfo) {
-      ServerAPI.nonceRequest();
+//      ServerAPI.nonceRequest();
       setConnectionType(connectionInfo.type);
-	  resetStorageVariables(); /*      */
+      resetStorageVariables(); /*   **********************************************************   */
+      Alert.alert();
       getAsyncStorageData()
       .then(() => {
         return checkConnectionAndSend();
       })
       .then(() => {});
-	  Alert.alert();
     },
     
     onDataChange: function() {
