@@ -31,7 +31,7 @@ class QuakeButton extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  fetchingPosition: state.survey.fetchingPosition,
+  fetchingPosition: state.buttons.fetchingPosition,
 });
 
 const mapActionsToProps = {

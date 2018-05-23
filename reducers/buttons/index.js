@@ -1,10 +1,13 @@
 import {
   DISABLE_QUAKE_BUTTON,
-  ENABLE_QUAKE_BUTTON
+  ENABLE_QUAKE_BUTTON,
+  DISABLE_SURVEY_BUTTON,
+  ENABLE_SURVEY_BUTTON
 } from '../../actions/types.js'
 
 const initialState = {
   fetchingPosition:false,
+  pendingSurvey:false
 }
 
 export default (state = initialState, action) => {
@@ -19,6 +22,18 @@ export default (state = initialState, action) => {
       return {
         ...state,
         fetchingPosition: false
+      }
+    }
+	case DISABLE_SURVEY_BUTTON: {
+      return {
+        ...state,
+        pendingSurvey: false
+      }
+    }
+    case ENABLE_SURVEY_BUTTON: {
+      return {
+        ...state,
+        pendingSurvey: true
       }
     }
     default: {
