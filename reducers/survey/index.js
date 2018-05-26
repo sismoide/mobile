@@ -66,9 +66,9 @@ export default (state = initialState(), action) => {
         binarySearchLo: 0,
         binarySearchHi: questions.length - 1,
         binarySearchMid,
-		surveyResults: null,
-		currentQuestion,
-		modalsTransitioning: false
+        surveyResults: null,
+        currentQuestion,
+        modalsTransitioning: false
       }
     }
 

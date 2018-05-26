@@ -27,8 +27,8 @@ export default (navigation) => {
         } catch (error) {}
         navigation.dispatch( NavigationActions.navigate({ routeName: 'Survey' }) );
         dispatch(enableQuakeButton());
-		dispatch(resetSurveyValues());
-		dispatch(enableSurveyButton());
+        dispatch(resetSurveyValues());
+        dispatch(enableSurveyButton());
       }
     );
   }

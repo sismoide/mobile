@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
         fetchingPosition: false
       }
     }
-	case DISABLE_SURVEY_BUTTON: {
+    case DISABLE_SURVEY_BUTTON: {
       return {
         ...state,
         pendingSurvey: false
