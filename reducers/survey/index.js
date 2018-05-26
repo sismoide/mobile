@@ -2,7 +2,8 @@ import {
   QUESTION_ANSWERED, 
   SURVEY_COMPLETED,
   MODALS_START_TRANSITIONING,
-  MODALS_STOP_TRANSITIONING
+  MODALS_STOP_TRANSITIONING,
+  RESET_SURVEY_VALUES
 } from '../../actions/types.js';
 import questions from './questions.js';
 
@@ -54,6 +55,20 @@ export default (state = initialState(), action) => {
       return {
         ...state,
         modalsTransitioning: false
+      }
+    }
+
+    case RESET_SURVEY_VALUES: {
+      const binarySearchMid = Math.floor((questions.length - 1) / 2);
+      const currentQuestion = questions[binarySearchMid]; 
+      return {
+        ...state,
+        binarySearchLo: 0,
+        binarySearchHi: questions.length - 1,
+        binarySearchMid,
+		surveyResults: null,
+		currentQuestion,
+		modalsTransitioning: false
       }
     }
 
