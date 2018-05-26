@@ -17,7 +17,7 @@ class SurveyButton extends Component{
       <Button
         onPress={this._onPress}
         disabled={!pendingSurvey}
-        title={'Encuesta'}
+        title={'Calcula la intensidad del sismo'}
         color='#ff8000'
       />
     )

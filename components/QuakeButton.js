@@ -23,7 +23,7 @@ class QuakeButton extends Component {
       >
         <Image
           source={require('../assets/red_button.png')}
-          style={{width:300, height:300}}
+          style={{width:275, height:275}}
         />
       </TouchableHighlight>
     );

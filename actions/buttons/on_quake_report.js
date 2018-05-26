@@ -25,7 +25,14 @@ export default (navigation) => {
           });
           Synchronizer.onDataChange();
         } catch (error) {}
-        navigation.dispatch( NavigationActions.navigate({ routeName: 'Survey' }) );
+        Alert.alert(
+          'Tu reporte ha sido enviado!',
+          'Te gustaría calcular la intensidad del sismo?',
+          [
+            {text: 'No, gracias', style: 'cancel'},
+            {text: 'Sí!', onPress: () => navigation.dispatch( NavigationActions.navigate({ routeName: 'Survey' }) )}
+          ]
+        )
         dispatch(enableQuakeButton());
         dispatch(resetSurveyValues());
         dispatch(enableSurveyButton());
