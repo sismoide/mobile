@@ -21,8 +21,8 @@ class SurveyCompleteModal extends React.Component {
       <SurveyModal 
         onRequestClose={ onRequestClose }
         isVisible={ couldBeVisible }>
-        <ModalHeader text={ 'Terminaste la encuesta, campeón. Te felicito!'
-          + ` Según nuestros cálculos, estás percibiendo un sismo de intensidad ${ surveyResults.intensity }.` }/>
+        <ModalHeader text={ 'Terminaste la encuesta. Felicitaciones!'
+          + ` Según nuestros cálculos, el sismo reportado fue de intensidad ${ surveyResults.intensity }.` }/>
         <ThankYouButton onPress={ () => { } }/>
       </SurveyModal>
     );
