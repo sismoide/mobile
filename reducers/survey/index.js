@@ -59,17 +59,7 @@ export default (state = initialState(), action) => {
     }
 
     case RESET_SURVEY_VALUES: {
-      const binarySearchMid = Math.floor((questions.length - 1) / 2);
-      const currentQuestion = questions[binarySearchMid]; 
-      return {
-        ...state,
-        binarySearchLo: 0,
-        binarySearchHi: questions.length - 1,
-        binarySearchMid,
-        surveyResults: null,
-        currentQuestion,
-        modalsTransitioning: false
-      }
+      return initialState();
     }
 
     case SURVEY_COMPLETED: {
