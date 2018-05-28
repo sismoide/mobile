@@ -129,4 +129,16 @@ export default {
   clearIntensities: async function() {
     return AsyncStorage.removeItem(QUAKE_INTENSITIES_KEY);
   },
+  
+  setStorageItem: async function(name, itemString) {
+    return AsyncStorage.setItem(name, itemString);
+  },
+  
+  getStorageItem: async function(name) {
+    return AsyncStorage.getItem(name);
+  },
+  
+  removeStorageItem: async function(name) {
+    return AsyncStorage.removeItem(name);
+  },
 }

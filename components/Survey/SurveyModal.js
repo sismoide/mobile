@@ -34,7 +34,7 @@ export default class SurveyModal extends React.Component {
               alignItems: 'center'
             }}>
             <ExitSurveyButton onPress={ this.props.onRequestClose }/>
-					</View>
+          </View>
         </View>
       </Modal>
     );

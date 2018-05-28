@@ -2,7 +2,8 @@ import {
   QUESTION_ANSWERED, 
   SURVEY_COMPLETED,
   MODALS_START_TRANSITIONING,
-  MODALS_STOP_TRANSITIONING
+  MODALS_STOP_TRANSITIONING,
+  RESET_SURVEY_VALUES
 } from '../../actions/types.js';
 import questions from './questions.js';
 
@@ -55,6 +56,10 @@ export default (state = initialState(), action) => {
         ...state,
         modalsTransitioning: false
       }
+    }
+
+    case RESET_SURVEY_VALUES: {
+      return initialState();
     }
 
     case SURVEY_COMPLETED: {

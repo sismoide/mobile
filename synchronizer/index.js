@@ -5,21 +5,25 @@ import Storage from "../database/storage.js";
 const LAST_QUAKE_POS_KEY = '@QuakeReports:lastPos';
 const LAST_SURVEY_POS_KEY = '@QuakeIntensities:lastPos';
 const QUAKE_ID_TO_SERVER_ID = '@IDDictionary:all';
+const USER_TOKEN = '@UserToken';
 
 export default (function() {
   let connectionType = 'none';
   let lastQuakeSentPos = null;
   let lastSurveySentPos = null;
   let quakeToServerId = null;
+  let userToken = null;
 
   function setConnectionType(type) {
     connectionType = type;
   }
 
-  async function getAsyncStorageData() {
-    quakePos = await AsyncStorage.getItem(LAST_QUAKE_POS_KEY);
-    surveyPos = await AsyncStorage.getItem(LAST_SURVEY_POS_KEY);
-    ids = await AsyncStorage.getItem(QUAKE_ID_TO_SERVER_ID);
+  async function getStorageData() {
+    quakePos = await Storage.getStorageItem(LAST_QUAKE_POS_KEY);
+    surveyPos = await Storage.getStorageItem(LAST_SURVEY_POS_KEY);
+    ids = await Storage.getStorageItem(QUAKE_ID_TO_SERVER_ID);
+    userToken = await Storage.getStorageItem(USER_TOKEN);
+
     lastQuakeSentPos = quakePos ? parseInt(quakePos) : -1;
     lastSurveySentPos = surveyPos ? parseInt(surveyPos) : -1;
     quakeToServerId = (ids ? JSON.parse(ids) : {});
@@ -35,14 +39,13 @@ export default (function() {
           let quakeToSend = quakeList[i];
           qId = quakeToSend.quakeId;
           delete quakeToSend.quakeId;
-          serverId = await ServerAPI.postQuake(quakeToSend);
+          serverId = await ServerAPI.postQuake(quakeToSend, userToken);
           quakeToServerId[qId] = serverId;
-          console.log("ServerID: "+serverId);
           lastQuakeSentPos = i.toString();
-          await AsyncStorage.setItem(
+          await Storage.setStorageItem(
             LAST_QUAKE_POS_KEY,
             lastQuakeSentPos);
-          await AsyncStorage.setItem(
+          await Storage.setStorageItem(
             QUAKE_ID_TO_SERVER_ID,
             JSON.stringify(quakeToServerId));
         }
@@ -56,7 +59,7 @@ export default (function() {
   async function sendSurveys() {
     surveyList = await Storage.getIntensities();
     if (!surveyList || surveyList == []) {
-	  return;
+      return;
     } 
     for (let i = 1+lastSurveySentPos; i<surveyList.length; i++) {
       try {
@@ -64,9 +67,9 @@ export default (function() {
         quakeId = surveyToSend.quakeId;
         delete surveyToSend.quakeId;
         serverId = quakeToServerId[quakeId];
-        await ServerAPI.patchSurvey(surveyList[i], serverId);
+        await ServerAPI.patchSurvey(surveyList[i], serverId, userToken);
         lastSurveySentPos = i.toString();
-        await AsyncStorage.setItem(
+        await Storage.setStorageItem(
           LAST_SURVEY_POS_KEY,
           lastSurveySentPos);
       }
@@ -77,14 +80,19 @@ export default (function() {
   }
 
   async function resetStorageVariables() {
-    await AsyncStorage.removeItem(LAST_QUAKE_POS_KEY);
-    await AsyncStorage.removeItem(LAST_SURVEY_POS_KEY);
-    await AsyncStorage.removeItem(QUAKE_ID_TO_SERVER_ID);
+    await Storage.removeStorageItem(LAST_QUAKE_POS_KEY);
+    await Storage.removeStorageItem(LAST_SURVEY_POS_KEY);
+    await Storage.removeStorageItem(QUAKE_ID_TO_SERVER_ID);
+    await Storage.removeStorageItem(USER_TOKEN);
   }
 
   async function checkConnectionAndSend() {
     if (connectionType != 'none') {
-      console.log("Connection Type: "+connectionType);
+      if (!userToken) {
+        nonce = await ServerAPI.nonceRequest();
+        userToken = await ServerAPI.challengeRequest(nonce.key, nonce.shaObj);
+        Storage.setStorageItem(USER_TOKEN, userToken);
+      }
       await sendQuakes();
       await sendSurveys();
     } else {
@@ -95,7 +103,7 @@ export default (function() {
   return {
     connectionHandler: function(connectionInfo) {
       setConnectionType(connectionInfo.type);
-      getAsyncStorageData()
+      getStorageData()
       .then(() => {
         return checkConnectionAndSend();
       })

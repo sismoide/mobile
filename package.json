@@ -17,6 +17,8 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "global": "^4.3.2",
+    "js-sha256": "^0.9.0",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.16",
     "react": "16.2.0",
