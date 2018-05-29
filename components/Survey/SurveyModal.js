@@ -11,34 +11,32 @@ import BaseStyle from './../../styles/base.js';
 
 const theme = getTheme();
 
-export default class SurveyModal extends React.Component {
-  render() {
-    return (
-      <Modal
-        useNativeDriver={ true }
-        animationOut='bounceOut'
-        animationIn='fadeInRight'
-        transparent={ true }
-        isVisible={ this.props.isVisible }
-        hideModalConentWhileAnimating={ true }
-        onRequestClose={ this.props.onRequestClose } >
-        <View style={{ flexDirection: 'column', flex: 1}}>
-          <View style={{ flex: 0.5 }}/>
-          <View style={ Object.assign({}, theme.cardStyle, { flex: 1 }) }>
-            { this.props.children } 
-          </View>
-          <View 
-            style={{ 
-              flex: 0.5, 
-              justifyContent: 'center', 
-              alignItems: 'center'
-            }}>
-            <ExitSurveyButton onPress={ this.props.onRequestClose }/>
-          </View>
+export default function SurveyModal(props) {
+  return (
+    <Modal
+      useNativeDriver={ true }
+      animationOut='bounceOut'
+      animationIn='fadeInRight'
+      transparent={ true }
+      isVisible={ props.isVisible }
+      hideModalConentWhileAnimating={ true }
+      onRequestClose={ props.onRequestClose } >
+      <View style={{ flexDirection: 'column', flex: 1}}>
+        <View style={{ flex: 0.5 }}/>
+        <View style={ Object.assign({}, theme.cardStyle, { flex: 1 }) }>
+          { props.children } 
         </View>
-      </Modal>
-    );
-  }
+        <View 
+          style={{ 
+            flex: 0.5, 
+            justifyContent: 'center', 
+            alignItems: 'center'
+          }}>
+          <ExitSurveyButton onPress={ props.onRequestClose }/>
+        </View>
+      </View>
+    </Modal>
+  );
 }
 
 const ExitSurveyButton = new MKButton.Builder()

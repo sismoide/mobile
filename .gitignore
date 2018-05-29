@@ -1,7 +1,14 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+*.iml
+
 # expo
 .expo/
+
+xcuserdata
+project.xcworkspace
+
+.DS_Store
 
 # json-server
 db.json
@@ -25,8 +32,11 @@ yarn-error.log*
 # watchman
 fs.*
 
+android/app/debug
 android/app/build
 android/.gradle/
 android/.idea/
 android/local.properties
+
+build/
 android/app/app.iml

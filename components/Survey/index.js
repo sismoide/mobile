@@ -30,7 +30,7 @@ class Survey extends Component {
     const dismissSurvey = () => onDismissSurvey(navigation);
     return( 
       <View>
-        <Image source={require('../../assets/map.png')} style={ { height: height, width: width } }/>
+        <Image source={require('../../assets/map.png')} style={ { height, width } }/>
         { 
           surveyWasCompleted 
           ? <SurveyCompleteModal onRequestClose={ dismissSurvey }/>
