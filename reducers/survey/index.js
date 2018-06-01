@@ -3,7 +3,7 @@ import {
   SURVEY_COMPLETED,
   MODALS_START_TRANSITIONING,
   MODALS_STOP_TRANSITIONING,
-  RESET_SURVEY_VALUES
+  RESET_SURVEY_VALUES,
 } from '../../actions/types.js';
 import questions from './questions.js';
 
@@ -16,7 +16,7 @@ const initialState = () => {
     binarySearchLo: 0,
     binarySearchHi: questions.length - 1,
     binarySearchMid,
-    modalsTransitioning: false
+    modalsTransitioning: false,
   }
 }
 
