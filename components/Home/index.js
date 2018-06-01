@@ -1,13 +1,15 @@
 import React from 'react';
 import { NetInfo, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
+import { MKSpinner } from 'react-native-material-kit';
 
 import Survey from '../Survey';
 import Synchronizer from '../../synchronizer';
-import QuakeButton from '../QuakeButton.js';
-import SurveyButton from '../SurveyButton.js';
+import QuakeButton from './QuakeButton.js';
+import SurveyButton from './SurveyButton.js';
 import fetchLastQuakeSubmissionDate from '../../actions/home/fetch_last_quake_submission_date.js';
 import navigationOptions from '../../styles/navigation_options.js';
+import FullScreenLoadingOverlay from '../Generic/full_screen_loading_overlay.js';
 
 import Storage from '../../database/storage.js';
 
@@ -20,7 +22,10 @@ class Home extends React.Component {
   }
 
   render() {
-    const { lastQuakeSubmissionDate } = this.props;
+    const { 
+      fetchingUserPosition,
+      lastQuakeSubmissionDate 
+    } = this.props;
     return(
       <View style={styles.container}>
         {/* pass navigation so that QuakeButton can handle navigation
@@ -29,6 +34,9 @@ class Home extends React.Component {
         <QuakeButton navigation={ this.props.navigation }/>
         <Text style={ { padding: 15 } }>La última vez que reportaste un sismo fue: { lastQuakeSubmissionDate }</Text>
         <SurveyButton navigation={ this.props.navigation }/>
+        { fetchingUserPosition
+          && <FullScreenLoadingOverlay />
+        }
       </View>
     );
   }
@@ -44,7 +52,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  lastQuakeSubmissionDate: state.home.lastQuakeSubmissionDate
+  lastQuakeSubmissionDate: state.home.lastQuakeSubmissionDate,
+  fetchingUserPosition: state.geolocation.fetchingUserPosition
 })
 
 const mapActionsToProps = {

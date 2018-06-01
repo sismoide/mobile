@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   userPosition: null,
-  fetchingUserPosition: false
+  fetchingUserPosition: false,
 }
 
 export default (state = initialState, action) => {

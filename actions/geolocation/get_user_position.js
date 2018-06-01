@@ -21,7 +21,7 @@ export default (dispatch) => {
       },
       {
         enableHighAccuracy: true,
-        timeout: 20000
+        timeout: 10000
       });
   }
 }
