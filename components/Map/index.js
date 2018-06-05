@@ -8,17 +8,13 @@ import FullScreenError from '../Generic/full_screen_error.js';
 import UserMarker from './user_marker.js';
 
 import baseNavigationOptions from '../../styles/navigation_options.js';
-import getUserPosition from '../../actions/geolocation/get_user_position.js';
+import userPositionActions from '../../actions/geolocation/user_position.js';
 
 /**
  * This component contains a map that displays relevant information
  * with respect to earthquakes in the vicinity of the user's location
  */
 class Map extends React.Component {
-  componentDidMount() {
-    this.props.getUserPosition();
-  }
-
   render() {
     const {
       userPosition,
@@ -53,6 +49,4 @@ const mapStateToProps = (state) => ({
   userPosition: state.geolocation.userPosition
 });
 
-const mapActionsToProps = { getUserPosition };
-
-export default connect(mapStateToProps, mapActionsToProps)(Map);
+export default connect(mapStateToProps)(Map);

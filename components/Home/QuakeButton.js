@@ -8,16 +8,8 @@ import Storage from '../../database/storage.js';
 import Config from '../../config/index.js';
 
 import onQuakeReport from '../../actions/home/on_quake_report.js';
-import getUserPosition from '../../actions/geolocation/get_user_position.js';
 
 class QuakeButton extends Component {
-  componentDidMount() {
-    // If somebody else hasn't done it yet, start fetching the user's location.
-    if (!this.props.userPosition && !this.props.fetchingUserPosition) {
-      this.props.getUserPosition();
-    }
-  }
-
   render() {
     const {
       userPosition,
@@ -48,9 +40,8 @@ const mapStateToProps = (state) => ({
   fetchingUserPosition: state.geolocation.fetchingUserPosition
 })
 
-const mapActionsToProps = {
+const mapActionsToProps = (dispatch) => ({
   onQuakeReport,
-  getUserPosition
-};
+});
 
 export default connect(mapStateToProps, mapActionsToProps)(QuakeButton);
