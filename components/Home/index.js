@@ -3,15 +3,18 @@ import { NetInfo, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { MKSpinner } from 'react-native-material-kit';
 
-import Survey from '../Survey';
 import Synchronizer from '../../synchronizer';
-import QuakeButton from './QuakeButton.js';
-import SurveyButton from './SurveyButton.js';
+
 import fetchLastQuakeSubmissionDate from '../../actions/home/fetch_last_quake_submission_date.js';
+import userPositionActions from '../../actions/geolocation/user_position.js';
+
 import navigationOptions from '../../styles/navigation_options.js';
+
+import Survey from '../Survey';
+import SurveyButton from './SurveyButton.js';
+import QuakeButton from './QuakeButton.js';
 import FullScreenLoadingOverlay from '../Generic/full_screen_loading_overlay.js';
 
-import Storage from '../../database/storage.js';
 
 class Home extends React.Component {
   static navigationOptions = navigationOptions;
@@ -19,6 +22,11 @@ class Home extends React.Component {
   componentDidMount = () => {
     NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler)
     this.props.fetchLastQuakeSubmissionDate();
+    if (!this.props.userPosition && !this.props.fetchingUserPosition) {
+      this.props.getUserPosition();
+    }
+    // subscribe to constantly receive user position updates regardless of anything
+    this.props.watchUserPosition(); 
   }
 
   render() {
@@ -56,8 +64,10 @@ const mapStateToProps = (state) => ({
   fetchingUserPosition: state.geolocation.fetchingUserPosition
 })
 
-const mapActionsToProps = {
-  fetchLastQuakeSubmissionDate
-};
+const mapActionsToProps = (dispatch) => ({
+  fetchLastQuakeSubmissionDate,
+  getUserPosition: userPositionActions(dispatch).get,
+  watchUserPosition: userPositionActions(dispatch).watch
+});
 
 export default connect(mapStateToProps, mapActionsToProps)(Home);
