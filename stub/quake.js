@@ -4,8 +4,8 @@
  * position on top of a circumference with center at `center`
  */
 function createQuakeAround(center) {
-  const distanceToCenter = 0.001;
-  const randomCircumferenceAngle = Math.random() * Math.PI;
+  const distanceToCenter = 0.005;
+  const randomCircumferenceAngle = Math.random() * 2 * Math.PI;
   return {
     magnitude: 8.87,
     depth: 300.34,
