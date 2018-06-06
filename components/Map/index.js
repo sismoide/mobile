@@ -9,12 +9,38 @@ import UserMarker from './user_marker.js';
 
 import baseNavigationOptions from '../../styles/navigation_options.js';
 import userPositionActions from '../../actions/geolocation/user_position.js';
+import fetchNearbyQuakes from '../../actions/map/fetch_nearby_quakes.js';
+
+// Will try to fetch nearby quakes every X seconds;
+const FETCH_NEARBY_QUAKES_INTERVAL_MILLISECONDS = 10000;
 
 /**
  * This component contains a map that displays relevant information
  * with respect to earthquakes in the vicinity of the user's location
  */
 class Map extends React.Component {
+  componentDidMount() {
+    const {
+      userPosition,
+      fetchNearbyQuakes
+    } = this.props;
+
+    const fetchQuakesIfUserLocationAvailable = () => {
+      if (userPosition) {
+        fetchNearbyQuakes(userPosition);
+      }
+    }
+
+    fetchQuakesIfUserLocationAvailable();
+    this.nearbyQuakesFetcherInterval = setInterval(() => {
+      fetchQuakesIfUserLocationAvailable
+    }, FETCH_NEARBY_QUAKES_INTERVAL_MILLISECONDS);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.nearbyQuakesFetcherInterval);
+  }
+
   render() {
     const {
       userPosition,
@@ -49,4 +75,8 @@ const mapStateToProps = (state) => ({
   userPosition: state.geolocation.userPosition
 });
 
-export default connect(mapStateToProps)(Map);
+const mapActionsToProps = {
+  fetchNearbyQuakes
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(Map);
