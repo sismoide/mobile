@@ -38,10 +38,10 @@ class QuakeButton extends Component {
 const mapStateToProps = (state) => ({
   userPosition: state.geolocation.userPosition,
   fetchingUserPosition: state.geolocation.fetchingUserPosition
-})
-
-const mapActionsToProps = (dispatch) => ({
-  onQuakeReport,
 });
+
+const mapActionsToProps = {
+  onQuakeReport,
+};
 
 export default connect(mapStateToProps, mapActionsToProps)(QuakeButton);
