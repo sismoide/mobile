@@ -6,19 +6,47 @@ import MapView from 'react-native-maps';
 import FullScreenSpinner from '../Generic/full_screen_spinner.js';
 import FullScreenError from '../Generic/full_screen_error.js';
 import UserMarker from './user_marker.js';
+import NearbyQuakeMarker from './nearby_quake_marker.js';
 
 import baseNavigationOptions from '../../styles/navigation_options.js';
 import userPositionActions from '../../actions/geolocation/user_position.js';
+import fetchNearbyQuakes from '../../actions/map/fetch_nearby_quakes.js';
+
+// Will try to fetch nearby quakes every X seconds;
+const FETCH_NEARBY_QUAKES_INTERVAL_MILLISECONDS = 10000;
 
 /**
  * This component contains a map that displays relevant information
  * with respect to earthquakes in the vicinity of the user's location
  */
 class Map extends React.Component {
+  componentDidMount() {
+    const {
+      userPosition,
+      fetchNearbyQuakes
+    } = this.props;
+
+    const fetchQuakesIfUserLocationAvailable = () => {
+      if (userPosition) {
+        fetchNearbyQuakes(userPosition);
+      }
+    }
+
+    fetchQuakesIfUserLocationAvailable();
+    this.nearbyQuakesFetcherInterval = setInterval(() => {
+      fetchQuakesIfUserLocationAvailable
+    }, FETCH_NEARBY_QUAKES_INTERVAL_MILLISECONDS);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.nearbyQuakesFetcherInterval);
+  }
+
   render() {
     const {
       userPosition,
-      fetchingUserPosition
+      fetchingUserPosition,
+      nearbyQuakes
     } = this.props;
     if (fetchingUserPosition) {
       return (<FullScreenSpinner />);
@@ -39,6 +67,13 @@ class Map extends React.Component {
           longitudeDelta: 0.0421 / 4,
         }}>
         <UserMarker coordinate={ userPosition } />
+        { 
+          nearbyQuakes.map(
+          (nearbyQuake, index) => 
+            <NearbyQuakeMarker 
+              key={ index }
+              position={ nearbyQuake.coordinates }/>) 
+        }
       </MapView>
     );
   }
@@ -46,7 +81,12 @@ class Map extends React.Component {
 
 const mapStateToProps = (state) => ({
   fetchingUserPosition: state.geolocation.fetchingUserPosition,
-  userPosition: state.geolocation.userPosition
+  userPosition: state.geolocation.userPosition,
+  nearbyQuakes: state.map.quakes
 });
 
-export default connect(mapStateToProps)(Map);
+const mapActionsToProps = {
+  fetchNearbyQuakes
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(Map);
