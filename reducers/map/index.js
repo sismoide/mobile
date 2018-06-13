@@ -1,13 +1,21 @@
-import { NEARBY_QUAKES_RECEIVED, FETCH_NEARBY_QUAKES_REQUEST } from '../../actions/types.js';
+import { 
+  NEARBY_QUAKES_RECEIVED, 
+  FETCH_NEARBY_QUAKES_REQUEST,
+  NEARBY_REPORTS_RECEIVED,
+} from '../../actions/types.js';
 
 const initialState = {
-  quakes: []
+  quakes: [],
+  reports: []
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_NEARBY_QUAKES_REQUEST: {
-      return state;
+    case NEARBY_REPORTS_RECEIVED: {
+      return {
+        ...state,
+        reports: action.payload.reports
+      }
     }
     
     case NEARBY_QUAKES_RECEIVED: {
