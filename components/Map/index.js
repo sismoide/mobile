@@ -65,7 +65,7 @@ class Map extends React.Component {
     return(
       <MapView
         style={{ ...StyleSheet.absoluteFillObject }}
-        initialRegion={{
+        region={{
           latitude: userPosition.latitude,
           longitude: userPosition.longitude,
           latitudeDelta: 0.0922 / 4,
