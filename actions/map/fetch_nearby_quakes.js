@@ -13,10 +13,11 @@ export default (position) => {
     if (SHOW_STUB_QUAKES) {
       dispatch(
         nearbyQuakesReceived(
-          Array(5).fill(position).map(StubQuakes.createQuakeAround)));
+          Array(5).fill(position).map(StubQuakes.stubRichterQuakeReportAround)
+        )
+      );
       return;
     }   
     // TODO: Actually make the http request.
   }
 }
-
