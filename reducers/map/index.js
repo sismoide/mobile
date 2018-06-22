@@ -1,13 +1,17 @@
 import { 
   NEARBY_QUAKES_RECEIVED, 
+  NEARBY_LANDMARKS_RECEIVED,
   FETCH_NEARBY_QUAKES_REQUEST,
   NEARBY_REPORTS_RECEIVED,
 } from '../../actions/types.js';
 
 const initialState = {
   quakes: [],
-  reports: []
-}
+  reports: [],
+  landmarks: [],
+
+  receivedLandmarksFromServer: false
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -22,6 +26,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         quakes: action.payload.quakes
+      }
+    }
+
+    case NEARBY_LANDMARKS_RECEIVED: {
+      return {
+        ...state,
+        landmarks: action.payload.landmarks,
+        receivedLandmarksFromServer: true
       }
     }
 
