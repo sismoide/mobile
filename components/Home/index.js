@@ -7,6 +7,7 @@ import Synchronizer from '../../synchronizer';
 
 import fetchLastQuakeSubmissionDate from '../../actions/home/fetch_last_quake_submission_date.js';
 import userPositionActions from '../../actions/geolocation/user_position.js';
+import authenticate from '../../actions/authentication/authenticate.js';
 
 import navigationOptions from '../../styles/navigation_options.js';
 
@@ -27,6 +28,7 @@ class Home extends React.Component {
     }
     // subscribe to constantly receive user position updates regardless of anything
     this.props.watchUserPosition(); 
+    this.props.authenticate();
   }
 
   render() {
@@ -65,7 +67,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionsToProps = (dispatch) => ({
-  fetchLastQuakeSubmissionDate,
+  authenticate: () => dispatch(authenticate()),
+  fetchLastQuakeSubmissionDate: () => dispatch(fetchLastQuakeSubmissionDate()),
   getUserPosition: userPositionActions(dispatch).get,
   watchUserPosition: userPositionActions(dispatch).watch
 });

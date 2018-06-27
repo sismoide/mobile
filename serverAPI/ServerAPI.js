@@ -1,6 +1,6 @@
 import Config from '../config/index.js';
 
-var sha256 = require('js-sha256');
+const sha256 = require('js-sha256');
 
 export default {
   nonceRequest: async function() {
