@@ -3,7 +3,6 @@ import { View, TouchableHighlight, Image } from 'react-native';
 import { MKSpinner } from 'react-native-material-kit';
 import { connect } from 'react-redux';
 
-import Synchronizer from '../../synchronizer';
 import Storage from '../../database/storage.js';
 import Config from '../../config/index.js';
 

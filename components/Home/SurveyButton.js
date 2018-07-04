@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Button } from 'react-native';
 import { connect } from 'react-redux';
 
-import Synchronizer from '../../synchronizer';
 import Storage from '../../database/storage.js';
 import Config from '../../config/index.js';
 

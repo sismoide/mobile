@@ -4,9 +4,9 @@ import modalsStartTransitioning from './modals_start_transitioning.js';
 import modalsStopTransitioning from './modals_stop_transitioning.js';
 import lastQuakeIntensityStored from './last_quake_intensity_stored.js';
 import disableSurveyButton from '../home/disable_survey_button.js';
+import notifySynchronizer from '../synchronizer/on_data_changed.js';
 
 import Storage from '../../database/storage.js';
-import Synchronizer from '../../synchronizer';
 
 export default (response) => {
   return (dispatch, getState) => {
@@ -21,7 +21,7 @@ export default (response) => {
           await Storage.submitLatestQuakeIntensity(state.currentQuestion.intensity);
           dispatch(lastQuakeIntensityStored());
           dispatch(disableSurveyButton());
-          Synchronizer.onDataChange();
+          dispatch(notifySynchronizer());
         } catch (error) { }
       }
       dispatch(modalsStopTransitioning())

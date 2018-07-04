@@ -8,6 +8,9 @@ export default {
       method: 'POST'
     }
     let response = await fetch(Config.SERVER_URL_NONCE, nonce);
+    if (!response.ok) {
+      throw response;
+    }
     let responseJson = await response.json();
     keySha = { 'h': sha256(responseJson.key) };
     return { key: responseJson.key, shaObj: keySha };
@@ -23,6 +26,9 @@ export default {
       body: JSON.stringify(shaObj)
     }
     let response = await fetch(Config.SERVER_URL_CHALLENGE, challenge);
+    if (!response.ok) {
+      throw response;
+    }
     let responseJson = await response.json();
     return responseJson.token;
   },
@@ -38,6 +44,9 @@ export default {
       body: JSON.stringify(body)
     };
     let response = await fetch(Config.SERVER_URL_REPORTS, quake);
+    if (!response.ok) {
+      throw response;
+    }
     let responseJson = await response.json();
     return responseJson.id;
   },
@@ -52,6 +61,6 @@ export default {
       body: JSON.stringify(body)
     };
     patchUrl = Config.SERVER_URL_REPORTS + id + '/';
-    await fetch(patchUrl, survey);
+    return fetch(patchUrl, survey);
   },
 }
