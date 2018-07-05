@@ -4,6 +4,7 @@ const SERVER_URL_REPORTS = 'http://wangulen.dgf.uchile.cl:17014/mobile/reports/'
 const LOCALE = 'America/Santiago'
 
 export const SHOW_STUB_QUAKES = true;
+export const SHOW_STUB_LANDMARKS = true;
 
 export default {
   SERVER_URL_NONCE,

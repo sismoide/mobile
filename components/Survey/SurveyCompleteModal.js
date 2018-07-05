@@ -23,24 +23,21 @@ class SurveyCompleteModal extends React.Component {
         isVisible={ couldBeVisible }>
         <ModalHeader text={ 'Terminaste la encuesta. Felicitaciones!'
           + ` Según nuestros cálculos, el sismo reportado fue de intensidad ${ surveyResults.intensity }.` }/>
-        <ThankYouButton onPress={ () => { } }/>
+        <ThankYouButton onPress={ onRequestClose }/>
       </SurveyModal>
     );
   }
 };
 
-
-class ThankYouButton extends React.Component {
-  render() {
-    return(
-      <View style={ styles.buttonContainer }>
-        <ClickableWithIcon 
-          icon='thumbs-up' 
-          text='De nada!'
-          onPress={ () => {} } />
-      </View>
-    );
-  }
+function ThankYouButton({ onPress }) {
+  return(
+    <View style={ styles.buttonContainer }>
+      <ClickableWithIcon 
+        icon='thumbs-up' 
+        text='De nada!'
+        onPress={ onPress } />
+    </View>
+  );
 }
 
 const mapStateToProps = (state) => ({

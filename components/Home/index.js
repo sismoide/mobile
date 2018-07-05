@@ -3,10 +3,10 @@ import { NetInfo, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { MKSpinner } from 'react-native-material-kit';
 
-import Synchronizer from '../../synchronizer';
-
 import fetchLastQuakeSubmissionDate from '../../actions/home/fetch_last_quake_submission_date.js';
 import userPositionActions from '../../actions/geolocation/user_position.js';
+import authenticate from '../../actions/authentication/authenticate.js';
+import onConnectionStatusChanged from '../../actions/synchronizer/on_connection_status_changed.js';
 
 import navigationOptions from '../../styles/navigation_options.js';
 
@@ -20,13 +20,14 @@ class Home extends React.Component {
   static navigationOptions = navigationOptions;
 
   componentDidMount = () => {
-    NetInfo.addEventListener('connectionChange', Synchronizer.connectionHandler)
+    NetInfo.addEventListener('connectionChange', this.props.onConnectionStatusChanged);
     this.props.fetchLastQuakeSubmissionDate();
     if (!this.props.userPosition && !this.props.fetchingUserPosition) {
       this.props.getUserPosition();
     }
     // subscribe to constantly receive user position updates regardless of anything
     this.props.watchUserPosition(); 
+    this.props.authenticate();
   }
 
   render() {
@@ -40,7 +41,6 @@ class Home extends React.Component {
             itself */}
         <Text style={ { padding: 15, fontWeight: 'bold', fontSize: 18 } }>Sentiste un sismo? Aprieta el botón!</Text>
         <QuakeButton navigation={ this.props.navigation }/>
-        <Text style={ { padding: 15 } }>La última vez que reportaste un sismo fue: { lastQuakeSubmissionDate }</Text>
         <SurveyButton navigation={ this.props.navigation }/>
         { fetchingUserPosition
           && <FullScreenLoadingOverlay />
@@ -65,9 +65,13 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionsToProps = (dispatch) => ({
-  fetchLastQuakeSubmissionDate,
+  authenticate: () => dispatch(authenticate()),
+  fetchLastQuakeSubmissionDate: () => dispatch(fetchLastQuakeSubmissionDate()),
   getUserPosition: userPositionActions(dispatch).get,
-  watchUserPosition: userPositionActions(dispatch).watch
+  watchUserPosition: userPositionActions(dispatch).watch,
+  onConnectionStatusChanged: (newConnectionStatus) => { 
+    dispatch(onConnectionStatusChanged(newConnectionStatus))
+  }
 });
 
 export default connect(mapStateToProps, mapActionsToProps)(Home);

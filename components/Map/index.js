@@ -8,11 +8,13 @@ import FullScreenError from '../Generic/full_screen_error.js';
 import UserMarker from './user_marker.js';
 import NearbyQuakeMarker from './nearby_quake_marker.js';
 import NearbyReportMarker from './nearby_report_marker.js';
+import LandmarkMarker from './landmark_marker.js';
 
 import baseNavigationOptions from '../../styles/navigation_options.js';
 import userPositionActions from '../../actions/geolocation/user_position.js';
 import fetchNearbyQuakes from '../../actions/map/fetch_nearby_quakes.js';
 import fetchNearbyReports from '../../actions/map/fetch_nearby_reports.js';
+import fetchNearbyLandmarks from '../../actions/map/fetch_nearby_landmarks.js';
 
 // Will try to fetch nearby quakes every X seconds;
 const FETCH_NEARBY_QUAKES_INTERVAL_MILLISECONDS = 10000;
@@ -46,12 +48,27 @@ class Map extends React.Component {
     clearInterval(this.nearbyQuakesFetcherInterval);
   }
 
+  componentDidUpdate() {
+    const {
+      userPosition,
+      fetchNearbyLandmarks,
+      nearbyLandmarks,
+      receivedLandmarksFromServer,
+    } = this.props;
+    if (userPosition && !receivedLandmarksFromServer) {
+      // If we have access to the user's location
+      // but the landmarks haven't been loaded yet, then do it.
+      fetchNearbyLandmarks(userPosition);
+    }
+  }
+
   render() {
     const {
       userPosition,
       fetchingUserPosition,
       nearbyQuakes,
-      nearbyReports
+      nearbyReports,
+      nearbyLandmarks,
     } = this.props;
     if (fetchingUserPosition) {
       return (<FullScreenSpinner />);
@@ -88,6 +105,14 @@ class Map extends React.Component {
                 report={ nearbyReport }/>
           )
         }
+        {
+          nearbyLandmarks.map(
+            (nearbyLandmark, index) =>
+              <LandmarkMarker
+                key={ index }
+                landmark={ nearbyLandmark } />
+          )
+        }
       </MapView>
     );
   }
@@ -97,12 +122,15 @@ const mapStateToProps = (state) => ({
   fetchingUserPosition: state.geolocation.fetchingUserPosition,
   userPosition: state.geolocation.userPosition,
   nearbyQuakes: state.map.quakes,
-  nearbyReports: state.map.reports
+  nearbyReports: state.map.reports,
+  nearbyLandmarks: state.map.landmarks,
+  receivedLandmarksFromServer: state.map.receivedLandmarksFromServer
 });
 
 const mapActionsToProps = {
   fetchNearbyQuakes,
   fetchNearbyReports,
+  fetchNearbyLandmarks,
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(Map);
