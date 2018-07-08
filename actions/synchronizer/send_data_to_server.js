@@ -8,8 +8,8 @@ import intensitiesSentToServer from './intensities_sent_to_server.js';
 import Storage from '../../database/storage.js';
 import ServerAPI from '../../serverAPI/ServerAPI.js';
 
-const LAST_QUAKE_SENT_INDEX = '@QuakeReports:lastSentIndex';
-const LAST_INTENSITY_SENT_INDEX = '@QuakeReports:lastIntensitySentIndex';
+const SENT_QUAKES_KEY = '@QuakeReports:sentQuakes';
+const SENT_INTENSITIES_KEY = '@QuakeReports:sentIntensities';
 const MAP_LOCAL_QUAKE_ID_TO_SERVER_QUAKE_ID 
   = '@QuakeReports:mapLocalQuakeIdToServerQuakeId';
 
@@ -22,9 +22,10 @@ export default () => {
       return;
     }
     const allQuakeReports = await Storage.getQuakeReports();
-    if (allQuakeReports) {
+    if (allQuakeReports.length > 0) {
       const sentQuakesInfo = await sendQuakeReports(allQuakeReports, userToken);
       if (sentQuakesInfo.length > 0) {
+        console.log(`${ sentQuakesInfo.length } quake reports were succesfully sent.`);
         dispatch(quakeReportsSent(sentQuakesInfo));
       }
     } else {
@@ -34,9 +35,10 @@ export default () => {
     }
 
     const allIntensities = await Storage.getIntensities();
-    if (allIntensities) {
+    if (allIntensities.length > 0) {
       const sentIntensitiesInfo = await sendIntensities(allIntensities, userToken);
       if (sentIntensitiesInfo.length > 0) {
+        console.log(`${ sentIntensitiesInfo.length } intensities were succesfully sent.`);
         dispatch(intensitiesSentToServer(sentIntensitiesInfo));
       }
     } else {
@@ -48,16 +50,20 @@ export default () => {
 };
 
 async function sendQuakeReports(quakeReports, userToken) {
-  const lastSentQuakeIndex = await getLastSentQuakeIndex();
   const mapLocalQuakeIdToServerQuakeId = await getMapLocalQuakeIdToServerQuakeId();
+  const alreadySentQuakes = await getSentQuakes();
   let sentQuakesInfo = [];
-  for (
-    let quakeIndex = lastSentQuakeIndex + 1; 
-    quakeIndex < quakeReports.length;
-    ++quakeIndex) {
-    const quake = quakeReports[quakeIndex];
+  const amountOfNotYetSentQuakes = 
+    quakeReports.length - Object.keys(alreadySentQuakes).length;
+  console.log(`Synchronizer trying to post quakes. ${ amountOfNotYetSentQuakes }`
+    + ` out of ${ quakeReports.length } have not yet been sent.`);
+  for (let quake of quakeReports) {
     // this id is different from the one we get from the server; hence `local`.
     const localQuakeId = quake.quakeId; 
+    if (alreadySentQuakes.hasOwnProperty(localQuakeId)) {
+      // the report has already been received by the server
+      continue;
+    }
     delete quake.quakeId; // server will reject otherwise
     try {
       serverQuakeId = await ServerAPI.postQuake(quake, userToken);
@@ -67,9 +73,10 @@ async function sendQuakeReports(quakeReports, userToken) {
         serverQuakeId,
       });
       mapLocalQuakeIdToServerQuakeId[localQuakeId] = serverQuakeId;
+      alreadySentQuakes[localQuakeId] = true; // `true` is just a dummy value.
 
-      // We can now update our last report index.
-      storeLastSentQuakeIndex(quakeIndex);
+      // We can now store our record of already sent quakes
+      storeSentQuakes(alreadySentQuakes);
       // And our local-to-server id mapper.
       storeMapLocalQuakeIdToServerQuakeId(mapLocalQuakeIdToServerQuakeId);
     } catch (error) {
@@ -81,15 +88,19 @@ async function sendQuakeReports(quakeReports, userToken) {
 }
 
 async function sendIntensities(intensities, userToken) {
-  const lastSentIntensityIndex = await getLastSentIntensityIndex();
   const mapLocalQuakeIdToServerQuakeId = await getMapLocalQuakeIdToServerQuakeId();
+  const alreadySentIntensities = await getSentIntensities();
   let sentIntensitiesInfo = [];
-  for (
-    let intensityIndex = lastSentIntensityIndex + 1;
-    intensityIndex < intensities.length;
-    ++intensityIndex) {
-    const intensityObject = intensities[intensityIndex];
+  const amountOfNotYetSentIntensities = 
+    intensities.length - Object.keys(alreadySentIntensities).length;
+  console.log(`Synchronizer trying to post intensities. ${ amountOfNotYetSentIntensities }`
+    + ` out of ${ intensities.length } have not yet been sent.`);
+  for (let intensityObject of intensities) {
     const relatedQuakeLocalId = intensityObject.quakeId;
+    if (alreadySentIntensities.hasOwnProperty(relatedQuakeLocalId)) {
+      // the intensity has already been received by the server
+      continue;
+    }
     delete intensityObject.quakeId; // server will reject otherwise.
     const relatedQuakeServerId = mapLocalQuakeIdToServerQuakeId[relatedQuakeLocalId];
     try {
@@ -103,8 +114,9 @@ async function sendIntensities(intensities, userToken) {
         serverQuakeId: relatedQuakeServerId,
         intensity: intensityObject.intensity
       });
+      alreadySentIntensities[relatedQuakeLocalId] = true;
       // And update the last sent intensity index in the storage.
-      storeLastSentIntensityIndex(intensityIndex);
+      storeSentIntensities(alreadySentIntensities);
     } catch (error) {
       console.log(`Couldn't send intensity update for 
         quake with local id ${ relatedQuakeLocalId }, 
@@ -120,9 +132,20 @@ async function sendIntensities(intensities, userToken) {
  * returned by the server.
  */
 async function getMapLocalQuakeIdToServerQuakeId() {
+  return _getMap(MAP_LOCAL_QUAKE_ID_TO_SERVER_QUAKE_ID);
+}
+
+async function getSentQuakes() {
+  return _getMap(SENT_QUAKES_KEY);
+}
+
+async function getSentIntensities() {
+  return _getMap(SENT_INTENSITIES_KEY);
+}
+
+async function _getMap(key) {
   try {
-    const map = JSON.parse(
-      await AsyncStorage.getItem(MAP_LOCAL_QUAKE_ID_TO_SERVER_QUAKE_ID));
+    const map = JSON.parse(await AsyncStorage.getItem(key));
     if (!map) {
       return {};
     }
@@ -132,48 +155,14 @@ async function getMapLocalQuakeIdToServerQuakeId() {
   }
 }
 
-
-async function storeLastSentQuakeIndex(index) {
-  return AsyncStorage.setItem(LAST_QUAKE_SENT_INDEX, index.toString());
+async function storeSentIntensities(sentIntensities) {
+  return AsyncStorage.setItem(SENT_INTENSITIES_KEY, JSON.stringify(sentIntensities));
 }
 
-async function storeLastSentIntensityIndex(index) {
-  return AsyncStorage.setItem(LAST_INTENSITY_SENT_INDEX, index.toString());
+async function storeSentQuakes(sentQuakes) {
+  return AsyncStorage.setItem(SENT_QUAKES_KEY, JSON.stringify(sentQuakes));
 }
 
 async function storeMapLocalQuakeIdToServerQuakeId(newMap) {
-  return AsyncStorage.setItem(
-    MAP_LOCAL_QUAKE_ID_TO_SERVER_QUAKE_ID, 
-    JSON.stringify(newMap));
-}
-
-
-/**
- * Returns the last sent quake index wr to the quake reports
- * list stored at @QuakeReports:all.
- * Returns -1 if no quake has ever been sent.
- */
-async function getLastSentQuakeIndex() {
-  return getIndexFromStorage(LAST_QUAKE_SENT_INDEX);
-}
-
-/**
- * Returns the last sent intensity index wr to the intensity submissions
- * list stored at @QuakeIntensities:all.
- * Returns -1 if no quake has ever been sent.
- */
-async function getLastSentIntensityIndex() {
-  return getIndexFromStorage(LAST_INTENSITY_SENT_INDEX);
-}
-
-async function getIndexFromStorage(key) {
-  try {
-    storedIndex = await AsyncStorage.getItem(key);
-    if (storedIndex !== null) {
-      return parseInt(storedIndex);
-    }
-    return -1;
-  } catch (err) {
-    return -1;
-  }
+  return AsyncStorage.setItem(MAP_LOCAL_QUAKE_ID_TO_SERVER_QUAKE_ID, JSON.stringify(newMap));
 }

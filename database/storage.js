@@ -101,22 +101,30 @@ export default {
   },
 
   /**
-   * @returns { Array } Quake intensities
+   * @returns { Promise(Array) } Quake intensities
    */
   getIntensities: async function() {
     try {
-      return JSON.parse(await AsyncStorage.getItem(QUAKE_INTENSITIES_KEY));
+      const intensities = JSON.parse(await AsyncStorage.getItem(QUAKE_INTENSITIES_KEY));
+      if (!intensities) {
+        return [];
+      }
+      return intensities;
     } catch (error) {
       return [];
     }
   },
 
   /**
-   * @returns { Promise }: All recorded quake reports
+   * @returns { Promise(Array) }: All recorded quake reports
    */
   getQuakeReports: async function() {
     try {
-      return JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
+      const quakeReports = JSON.parse(await AsyncStorage.getItem(QUAKE_REPORTS_KEY));
+      if (!quakeReports) {
+        return [];
+      }
+      return quakeReports;
     } catch(error) {
       return [];
     }

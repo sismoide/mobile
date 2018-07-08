@@ -16,7 +16,7 @@ export default (response) => {
       const state = getState().survey;
       if (state.binarySearchLo >= state.binarySearchHi) {
         // This is the condition that determines completion.
-        dispatch(surveyCompleted({ intensity: state.currentQuestion.intensity }));;
+        dispatch(surveyCompleted({ intensity: state.currentQuestion.intensity }));
         try {
           await Storage.submitLatestQuakeIntensity(state.currentQuestion.intensity);
           dispatch(lastQuakeIntensityStored());
