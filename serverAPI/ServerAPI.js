@@ -2,6 +2,14 @@ import Config from '../config/index.js';
 
 const sha256 = require('js-sha256');
 
+
+function _headersForAuthToken(authToken) {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Token ${ authToken }`
+  };
+}
+
 export default {
   nonceRequest: async function() {
     const nonce = {
@@ -31,6 +39,32 @@ export default {
     }
     let responseJson = await response.json();
     return responseJson.token;
+  },
+
+  fetchNearbyLandmarks: async function(userToken, userLocation) {
+    const squareSize = 0.1;
+    const minLat = userLocation.latitude - squareSize;
+    const maxLat = userLocation.latitude + squareSize;
+    const minLong = userLocation.longitude - squareSize;
+    const maxLong = userLocation.longitude + squareSize;
+    const queryString = 
+      `?min_lat=${ minLat }&max_lat=${ maxLat }&min_long=${ minLong }&max_long=${ maxLong }`;
+    const fullUrl = `${ Config.SERVER_URL_LANDMARKS }${ queryString }`;
+    const response = await fetch(fullUrl, {
+      method: 'GET',
+      headers: _headersForAuthToken(userToken)
+    });
+    if (!response.ok) {
+      throw response;
+    }
+    const nearbyLandmarks = await response.json();
+    return nearbyLandmarks.map(landmark => ({ 
+      ...landmark,
+      coordinates: {
+        latitude: Number(landmark.coordinates.latitude),
+        longitude: Number(landmark.coordinates.longitude),
+      }
+    }));
   },
 
   postQuake: async function(body, userToken) {

@@ -26,7 +26,7 @@ class Home extends React.Component {
       this.props.getUserPosition();
     }
     // subscribe to constantly receive user position updates regardless of anything
-    this.props.watchUserPosition(); 
+    // this.props.watchUserPosition(); 
     this.props.authenticate();
   }
 

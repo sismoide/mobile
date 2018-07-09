@@ -25,7 +25,8 @@ function randomStubLandmarkAround(center) {
 const mapLandmarkTypeToReadable = {
   hospital: 'Hospital',
   waterSource: 'Fuente de Agua',
-  gasStation: 'Bencinera'
+  gasStation: 'Bencinera',
+  SAPU: 'SAPU',
 }
 
 export default {
