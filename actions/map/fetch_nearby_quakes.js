@@ -1,6 +1,8 @@
 import fetchNearbyQuakesRequest from './fetch_nearby_quakes_request.js';
 import nearbyQuakesReceived from './nearby_quakes_received.js';
+import nearbyQuakesError from './nearby_quakes_error.js';
 
+import ServerAPI from '../../serverAPI/ServerAPI.js';
 import StubQuakes from '../../stub/quake.js';
 import { SHOW_STUB_QUAKES } from '../../config';
 
@@ -8,7 +10,7 @@ import { SHOW_STUB_QUAKES } from '../../config';
  * Asks the server for nearby quakes close to `position`.
  */
 export default (position) => {
-  return dispatch => {
+  return async (dispatch, getState) => {
     dispatch(fetchNearbyQuakesRequest());
     if (SHOW_STUB_QUAKES) {
       dispatch(
@@ -18,6 +20,20 @@ export default (position) => {
       );
       return;
     }   
-    // TODO: Actually make the http request.
+    const userToken = getState().authentication.userToken;
+    if (!userToken) {
+      dispatch(nearbyQuakesError('No user token'));
+      return;
+    }
+    if (!position) {
+      dispatch(nearbyQuakesError('No user location'));
+      return;
+    }
+    try {
+      dispatch(nearbyQuakesReceived(
+        await ServerAPI.fetchNearbyQuakes(userToken, position)));
+    } catch (error) {
+      dispatch(nearbyQuakesError(error));
+    }
   }
 }

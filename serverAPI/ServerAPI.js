@@ -1,13 +1,42 @@
 import Config from '../config/index.js';
+import moment from 'moment-timezone';
 
 const sha256 = require('js-sha256');
-
 
 function _headersForAuthToken(authToken) {
   return {
     'Content-Type': 'application/json',
     'Authorization': `Token ${ authToken }`
   };
+}
+
+function _withNumericCoordinates(object) {
+  return {
+    ...object,
+    coordinates: {
+      latitude: Number(object.coordinates.latitude),
+      longitude: Number(object.coordinates.longitude),
+    }
+  }
+}
+
+async function _fetchNearbySomething(userToken, userLocation, baseUrl) {
+  const squareSize = 2;
+  const minLat = userLocation.latitude - squareSize;
+  const maxLat = userLocation.latitude + squareSize;
+  const minLong = userLocation.longitude - squareSize;
+  const maxLong = userLocation.longitude + squareSize;
+  const queryString = 
+    `?min_lat=${ minLat }&max_lat=${ maxLat }&min_long=${ minLong }&max_long=${ maxLong }`;
+  const fullUrl = `${ baseUrl }${ queryString }`;
+  const response = await fetch(fullUrl, {
+    method: 'GET',
+    headers: _headersForAuthToken(userToken)
+  });
+  if (!response.ok) {
+    throw response;
+  }
+  return await response.json();
 }
 
 export default {
@@ -42,14 +71,29 @@ export default {
   },
 
   fetchNearbyLandmarks: async function(userToken, userLocation) {
-    const squareSize = 0.1;
-    const minLat = userLocation.latitude - squareSize;
-    const maxLat = userLocation.latitude + squareSize;
-    const minLong = userLocation.longitude - squareSize;
-    const maxLong = userLocation.longitude + squareSize;
-    const queryString = 
-      `?min_lat=${ minLat }&max_lat=${ maxLat }&min_long=${ minLong }&max_long=${ maxLong }`;
-    const fullUrl = `${ Config.SERVER_URL_LANDMARKS }${ queryString }`;
+    const nearbyLandmarks = await _fetchNearbySomething(
+      userToken, userLocation, Config.SERVER_URL_LANDMARKS);
+    return nearbyLandmarks.map(_withNumericCoordinates);
+  },
+
+  fetchNearbyQuakes: async function(userToken, userLocation) {
+    const nearbyQuakes = await _fetchNearbySomething(
+      userToken, userLocation, Config.SERVER_URL_QUAKES);
+    return nearbyQuakes.map(_withNumericCoordinates);
+  },
+
+  fetchNearbyReports: async function(userToken, userLocation) {
+    const serverSideDateFormat = 'YYYY-MM-DDThh:mm';
+    const yesterday = 
+      moment().tz(Config.LOCALE).add(-12, 'hours').format(serverSideDateFormat);
+    const rightNow = moment().tz(Config.LOCALE).format(serverSideDateFormat);
+    const queryString = `?latitude=${ userLocation.latitude }`
+      + `&longitude=${ userLocation.longitude }`
+      + `&rad=${ 5 }`
+      + `&start=${ yesterday }`
+      + `&end=${ rightNow }`;
+    const fullUrl = `${ Config.SERVER_URL_NEARBY_REPORTS }${ queryString }`;
+    console.log(fullUrl);
     const response = await fetch(fullUrl, {
       method: 'GET',
       headers: _headersForAuthToken(userToken)
@@ -57,14 +101,8 @@ export default {
     if (!response.ok) {
       throw response;
     }
-    const nearbyLandmarks = await response.json();
-    return nearbyLandmarks.map(landmark => ({ 
-      ...landmark,
-      coordinates: {
-        latitude: Number(landmark.coordinates.latitude),
-        longitude: Number(landmark.coordinates.longitude),
-      }
-    }));
+    const nearbyReports = await response.json();
+    return nearbyReports.map(_withNumericCoordinates);
   },
 
   postQuake: async function(body, userToken) {
