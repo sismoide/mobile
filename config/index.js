@@ -10,6 +10,7 @@ const LOCALE = 'America/Santiago';
 export const SHOW_STUB_REPORTS = false;
 export const SHOW_STUB_QUAKES = false;
 export const SHOW_STUB_LANDMARKS = false;
+export const USE_STUB_LOCATION = true;
 
 export default {
   SERVER_URL_NONCE,

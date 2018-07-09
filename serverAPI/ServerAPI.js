@@ -94,7 +94,6 @@ export default {
       + `&start=${ yesterday }`
       + `&end=${ rightNow }`;
     const fullUrl = `${ Config.SERVER_URL_NEARBY_REPORTS }${ queryString }`;
-    console.log(fullUrl);
     const response = await fetch(fullUrl, {
       method: 'GET',
       headers: _headersForAuthToken(userToken)

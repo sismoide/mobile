@@ -2,6 +2,9 @@ import userLocationRequest from './user_location_request.js';
 import userLocationReceived from './user_location_received.js';
 import userLocationError from './user_location_error.js';
 
+import { USE_STUB_LOCATION } from '../../config';
+import { BEAUCHEF } from '../../stub/locations.js';
+
 export default (dispatch) => {
   const geolocationArgs = [
     (position) => {
@@ -22,6 +25,9 @@ export default (dispatch) => {
   return {
     watch: () => (function(dispatch) { 
       // NOTE: No request action. This is intended.
+      if (USE_STUB_LOCATION) {
+        return;
+      }
       if (!navigator.geolocation) {
         dispatch(userLocationError({ error: 'geolocation not available' }));
         return;
@@ -31,6 +37,10 @@ export default (dispatch) => {
 
     get: () => (function(dispatch) {
       dispatch(userLocationRequest());
+      if (USE_STUB_LOCATION) {
+        dispatch(userLocationReceived(BEAUCHEF));
+        return;
+      }
       if (!navigator.geolocation) {
         dispatch(userLocationError({ error: 'geolocation not available' }));
         return;
