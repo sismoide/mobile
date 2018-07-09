@@ -1,4 +1,5 @@
 import Config from '../config/index.js';
+
 import moment from 'moment-timezone';
 
 const sha256 = require('js-sha256');
@@ -83,7 +84,7 @@ export default {
   },
 
   fetchNearbyReports: async function(userToken, userLocation) {
-    const serverSideDateFormat = 'YYYY-MM-DDThh:mm';
+    const serverSideDateFormat = 'YYYY-MM-DDTHH:mm';
     const yesterday = 
       moment().tz(Config.LOCALE).add(-12, 'hours').format(serverSideDateFormat);
     const rightNow = moment().tz(Config.LOCALE).format(serverSideDateFormat);
