@@ -86,8 +86,8 @@ export default {
   fetchNearbyReports: async function(userToken, userLocation) {
     const serverSideDateFormat = 'YYYY-MM-DDTHH:mm';
     const yesterday = 
-      moment().tz(Config.LOCALE).add(-12, 'hours').format(serverSideDateFormat);
-    const rightNow = moment().tz(Config.LOCALE).format(serverSideDateFormat);
+      moment().utc().add(-12, 'hours').format(serverSideDateFormat);
+    const rightNow = moment().utc().format(serverSideDateFormat);
     const queryString = `?latitude=${ userLocation.latitude }`
       + `&longitude=${ userLocation.longitude }`
       + `&rad=${ 5 }`

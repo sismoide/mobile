@@ -1,9 +1,10 @@
-const SERVER_URL_NONCE = 'http://wangulen.dgf.uchile.cl:17014/mobile/nonce/';
-const SERVER_URL_CHALLENGE = 'http://wangulen.dgf.uchile.cl:17014/mobile/challenge/';
-const SERVER_URL_REPORTS = 'http://wangulen.dgf.uchile.cl:17014/mobile/reports/';
-const SERVER_URL_LANDMARKS = 'http://wangulen.dgf.uchile.cl:17014/map/landmarks/';
-const SERVER_URL_QUAKES = 'http://wangulen.dgf.uchile.cl:17014/mobile/nearbyquakes/';
-const SERVER_URL_NEARBY_REPORTS = 'http://wangulen.dgf.uchile.cl:17014/mobile/nearbyreports/';
+const SERVER_HOST='http://wangulen.dgf.uchile.cl:17014';
+const SERVER_URL_NONCE = `${ SERVER_HOST }/mobile/nonce/`;
+const SERVER_URL_CHALLENGE = `${ SERVER_HOST }/mobile/challenge/`;
+const SERVER_URL_REPORTS = `${ SERVER_HOST }/mobile/reports/`;
+const SERVER_URL_LANDMARKS = `${ SERVER_HOST }/map/landmarks/`;
+const SERVER_URL_QUAKES = `${ SERVER_HOST }/mobile/nearbyquakes/`;
+const SERVER_URL_NEARBY_REPORTS = `${ SERVER_HOST }/mobile/nearbyreports/`;
 
 const LOCALE = 'America/Santiago';
 
